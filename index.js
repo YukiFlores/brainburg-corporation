@@ -52,6 +52,7 @@ tags = ({
     "РЛС": "Сотрудник LSFM",
     "LSFM": "Сотрудник LSFM",
     "ЛСФМ": "Сотрудник LSFM",
+    "CNN LS": "Сотрудник LSFM",
     
     "R-SF": "Сотрудник SFFM",
     "RSF": "Сотрудник SFFM",
@@ -59,6 +60,7 @@ tags = ({
     "РСФ": "Сотрудник SFFM",
     "SFFM": "Сотрудник SFFM",
     "СФФМ": "Сотрудник SFFM",
+    "CNN SF": "Сотрудник SFFM",
     
     "R-LV": "Сотрудник LVFM",
     "RLV": "Сотрудник LVFM",
@@ -66,6 +68,7 @@ tags = ({
     "РЛВ": "Сотрудник LVFM",
     "LVFM": "Сотрудник LVFM",
     "ЛВФМ": "Сотрудник LVFM",
+    "CNN LV": "Сотрудник LVFM",
 
     "WMC": "Warlock MC",
     "W-MC": "Warlock MC",
@@ -136,6 +139,7 @@ let manytags = [
 "РЛС",
 "LSFM",
 "ЛСФМ",
+"CNN LS",
     
 "R-SF",
 "RSF",
@@ -143,6 +147,7 @@ let manytags = [
 "РСФ",
 "SFFM",
 "СФФМ",
+"CNN SF",
     
 "R-LV",
 "RLV",
@@ -150,6 +155,7 @@ let manytags = [
 "РЛВ",
 "LVFM",
 "ЛВФМ",
+"CNN LV",
 
 "WMC",
 "W-MC",
