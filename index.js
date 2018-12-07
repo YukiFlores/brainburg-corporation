@@ -158,12 +158,12 @@ bot.on('message', async message => {
             message.reply(`\`нельзя отправить запрос с длинной меньше 5 или больше 1300 символов!\``).then(msg => msg.delete(15000));
             return message.delete()
         }
-        let author_bot = message.guild.members.find(m => m.id == 336207279412215809);
+        let author_bot = message.guild.channels.find(c => c.id == "модераторы");
         if (!author_bot){
-            message.reply(`\`я не смог отправить сообщение.. Создателя данного бота нет на данном сервере.\``).then(msg => msg.delete(15000));
+            message.reply(`\`я не смог отправить сообщение.. Канал модераторов не был найден.\``).then(msg => msg.delete(15000));
             return message.delete()
         }
-        author_bot.send(`**Привет, Kory_McGregor! Пользователь <@${message.author.id}> \`(${message.author.id})\` отправил запрос с сервера \`${message.guild.name}\` \`(${message.guild.id})\`.**\n` +
+        author_bot.send(`**Пользователь <@${message.author.id}> \`(${message.author.id})\` отправил запрос с канала \`${message.channel.name}\` \`(${message.guild.id})\`.**\n` +
         `**Суть обращения:** ${bugreport}`);
         message.reply(`\`хэй! Я отправил твое сообщение на рассмотрение моему боссу робохомячков!\``).then(msg => msg.delete(15000));
         return message.delete();
@@ -210,7 +210,7 @@ bot.on('message', async message => {
                 if (user.roles.some(r => r.name == "Нелегал")) user.removeRole(message.guild.roles.find(r => r.name == "Нелегал"));
                 if (user.roles.some(r => r.name == "Сотрудник гос. организации")) user.removeRole(message.guild.roles.find(r => r.name == "Сотрудник гос. организации"));
                 let ot_channel = message.guild.channels.find(c => c.name == "лог-ролей");
-                ot_channel.send(`<@${user.id}>, \`с вас сняли роль\`  <@&${roleremove.id}>  \`по причине: ${collected.first().content} Источник:\` <@${message.author.id}>`).catch(err => message.channel.send(`<@${user.id}>, \`с вас сняли роль\`  <@&${roleremove.id}>  \`по причине: ${collected.first().content} Источник:\` <@${message.author.id}>`));
+                ot_channel.send(`__Пользователь:__ <@${message.author.id}>\n\`\`\`diff\n- снял роль <@&${roleremove.id}>\`\`\`__Пользователю:__ <@${user.id}>\n**————————————**`)
                 collected.first().delete();
                 answer.delete();
                 return message.react(`✅`);
