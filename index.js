@@ -6,10 +6,42 @@ const nrpnames = new Set(); // Невалидные ники будут запи
 const sened = new Set(); // Уже отправленные запросы будут записаны в sened
 const snyatie = new Set(); // Уже отправленные запросы на снятие роли быдут записаны в snyatie
 
+tagstoperms = ({
+    "Сотрудник правительства": "ГС Гос, ЗГС Гос, ГС правительства, ЗГС правительства, Следящий правительства, Лидер правительства, Премьер-Министр, Мэр ЛС, Мэр СФ, Мэр ЛВ",
+    "Сотрудник автошколы": "ГС Гос, ЗГС Гос, Лидер автошколы, Зам. автошколы",
+    "Сотрудник банка": "ГС Гос, ЗГС Гос, Лидер банка, Зам. банка", 
+    "Сотрудник FBI": "ГС Гос, ЗГС Гос, ГС юстиции, ЗГС юстиции, Следящий юстиции, Министр Юстиции, Лидер FBI, Зам. FBI", 
+    "Сотрудник S.W.A.T.": "ГС Гос, ЗГС Гос, ГС юстиции, ЗГС юстиции, Следящий юстиции, Министр Юстиции, Глава S.W.A.T., Зам. S.W.A.T.",
+    "Сотрудник LSPD": "ГС Гос, ЗГС Гос, ГС юстиции, ЗГС юстиции, Следящий юстиции, Министр Юстиции, Лидер LSPD, Зам. LSPD", 
+    "Сотрудник SFPD": "ГС Гос, ЗГС Гос, ГС юстиции, ЗГС юстиции, Следящий юстиции, Министр Юстиции, Лидер SFPD, Зам. SFPD", 
+    "Сотрудник LVPD": "ГС Гос, ЗГС Гос, ГС юстиции, ЗГС юстиции, Следящий юстиции, Министр Юстиции, Лидер LVPD, Зам. LVPD", 
+    "Сотрудник RCSD": "ГС Гос, ЗГС Гос, ГС юстиции, ЗГС юстиции, Следящий юстиции, Министр Юстиции, Лидер RCSD, Зам. RCSD", 
+    "Сотрудник ТСР": "ГС Гос, ЗГС Гос, ГС Тюрьмы Строгого Режима, ЗГС Тюрьмы Строгого режима, Следящий ТСР, Начальник ТСР, Зам. Начальника ТСР", 
+    "Военнослужащий LSa": "ГС Гос, ЗГС Гос, ГС обороны, ЗГС обороны, Следящий обороны, Министр Обороны, Лидер LSa, Зам. LSa", 
+    "Военнослужащий SFa": "ГС Гос, ЗГС Гос, ГС обороны, ЗГС обороны, Следящий обороны, Министр Обороны, Лидер SFa, Зам. SFa", 
+    "Сотрудник LSMC": "ГС Гос, ЗГС Гос, ГС здравоохранения, ЗГС здравоохранения, Следящий здравоохранения, Министр Здравоохранения, Лидер LSMC, Зам. LSMC", 
+    "Сотрудник SFMC": "ГС Гос, ЗГС Гос, ГС здравоохранения, ЗГС здравоохранения, Следящий здравоохранения, Министр Здравоохранения, Лидер SFMC, Зам. SFMC", 
+    "Сотрудник LVMC": "ГС Гос, ЗГС Гос, ГС здравоохранения, ЗГС здравоохранения, Следящий здравоохранения, Министр Здравоохранения, Лидер LVMC, Зам. LVMC", 
+    "Сотрудник LSFM": "ГС СМИ, ЗГС СМИ, Следящий СМИ, Лидер LSFM, Зам. LSFM", 
+    "Сотрудник SFFM": "ГС СМИ, ЗГС СМИ, Следящий СМИ, Лидер SFFM, Зам. SFFM", 
+    "Сотрудник LVFM": "ГС СМИ, ЗГС СМИ, Следящий СМИ, Лидер LVFM, Зам. LVFM", 
+    "Rifa": "ГС Нелегалов, ГС гетто, ЗГС гетто, Следящий гетто, Лидер Rifa, Зам. Rifa", 
+    "Ballas": "ГС Нелегалов, ГС гетто, ЗГС гетто, Следящий гетто, Лидер Ballas, Зам. Ballas", 
+    "Grove Street": "ГС Нелегалов, ГС гетто, ЗГС гетто, Следящий гетто, Лидер Grove Street, Зам. Grove Street", 
+    "Vagos": "ГС Нелегалов, ГС гетто, ЗГС гетто, Следящий гетто, Лидер Vagos, Зам. Vagos", 
+    "Night Wolfs": "ГС Нелегалов, ГС гетто, ЗГС гетто, Следящий гетто, Лидер Night Wolfs, Зам. Night Wolfs", 
+    "Aztecas": "ГС Нелегалов, ГС гетто, ЗГС гетто, Следящий гетто, Лидер Aztecas, Зам. Aztecas", 
+    "Yakuza": "ГС Нелегалов, ГС мафии, ЗГС мафии, Следящий мафии, Лидер Yakuza, Зам. Yakuza", 
+    "La Cosa Nostra": "ГС Нелегалов, ГС мафии, ЗГС мафии, Следящий мафии, Лидер La Cosa Nostra, Зам. La Cosa Nostra", 
+    "Russian Mafia": "ГС Нелегалов, ГС мафии, ЗГС мафии, Следящий мафии, Лидер Russian Mafia, Зам. Russian Mafia",
+    "Warlock MC": "ГС Нелегалов, ГС мафии, ЗГС мафии, Следящий мафии, Лидер Warlock MC, Зам. Warlock MC",
+});
+
 tags = ({
     "ПРА-ВО": "Сотрудник правительства",
     "ГЦЛ": "Сотрудник автошколы",
     "АШ": "Сотрудник автошколы",
+    "AS": "Сотрудник автошколы",
     "ЦБ": "Сотрудник банка",
 
     "FBI": "Сотрудник FBI",
@@ -97,6 +129,7 @@ let manytags = [
 "ПРА-ВО",
 "ГЦЛ",
 "АШ",
+"AS",
 "ЦБ",
 
 "FBI",
@@ -179,10 +212,9 @@ let manytags = [
 "AZTEC",  
 "АЦТЕК",  
 ];
-let rolesgg = ["Сотрудник правительства", "Сотрудник автошколы", "Сотрудник банка", "Сотрудник FBI", "Сотрудник S.W.A.T.", "Сотрудник LSPD", "Сотрудник SFPD", "Сотрудник LVPD", "Сотрудник RCSD", "Сотрудник ТСР", "Военнослужащий LSa", "Военнослужащий SFa", "Сотрудник LSMC", "Сотрудник SFMC", "Сотрудник LVMC", "Сотрудник LSFM", "Сотрудник SFFM",
-"Сотрудник LVFM", "Rifa", "Ballas", "Grove Street", "Vagos", "Night Wolfs", "Aztecas", "Yakuza", "La Cosa Nostra",  "Russian Mafia",  "Warlock MC"]
+let rolesgg = ["Сотрудник правительства", "Сотрудник автошколы", "Сотрудник банка", "Сотрудник FBI", "Сотрудник S.W.A.T.", "Сотрудник LSPD", "Сотрудник SFPD", "Сотрудник LVPD", "Сотрудник RCSD", "Сотрудник ТСР", "Военнослужащий LSa", "Военнослужащий SFa", "Сотрудник LSMC", "Сотрудник SFMC", "Сотрудник LVMC", "Сотрудник LSFM", "Сотрудник SFFM", "Сотрудник LVFM", "Rifa", "Ballas", "Grove Street", "Vagos", "Night Wolfs", "Aztecas", "Yakuza", "La Cosa Nostra",  "Russian Mafia",  "Warlock MC"]
 let canremoverole = ["⚃ Администратор 4 ур. ⚃", "⚂ Администратор 3 ур. ⚂", "⚁ Администратор 2 ур. ⚁", "⚀ Администратор 1 ур. ⚀", "Модератор Discord", "Министры", "Лидеры фракций", "Заместители фракций"];
-let gos_roles = ["Сотрудник правительства", "Сотрудник автошколы", "Сотрудник банка", "Сотрудник FBI", "Сотрудник S.W.A.T.", "Сотрудник LSPD", "Сотрудник SFPD", "Сотрудник LVPD", "Сотрудник RCSD", "Сотрудник ТСР", "Военнослужащий LSa", "Военнослужащий SFa", "Сотрудник LSMC", "Сотрудник SFMC", "Сотрудник LVMC", "Сотрудник LSFM", "Сотрудник SFFM", "Сотрудник LVFM"];
+let gos_roles = ["Сотрудник правительства", "Сотрудник автошколы", "Сотрудник банка", "Сотрудник FBI", "Сотрудник S.W.A.T.", "Сотрудник LSPD", "Сотрудник SFPD", "Сотрудник LVPD", "Сотрудник RCSD", "Сотрудник ТСР", "Военнослужащий LSa", "Военнослужащий SFa", "Сотрудник LSMC", "Сотрудник SFMC", "Сотрудник LVMC"];
 let mafia_roles = ["Rifa", "Ballas", "Grove Street", "Vagos", "Night Wolfs", "Aztecas", "Yakuza", "La Cosa Nostra",  "Russian Mafia",  "Warlock MC"];
 
 let serverid = "282282840840732672";
@@ -205,6 +237,13 @@ bot.on('message', async message => {
     if (message.type === "PINS_ADD") if (message.channel.name == "requests-for-roles") message.delete();
     if (message.content == "/ping") return message.reply("`я онлайн.`") && console.log(`Бот ответил ${message.member.displayName}, что я онлайн.`)
     if (message.author.bot) return
+    
+    if (message.content.startsWith(`/run`)){
+        if (message.author.id != "336207279412215809") return message.delete();
+        const args = message.content.slice(`/run`).split(/ +/);
+        let cmdrun = args.slice(1).join(" ");
+        eval(cmdrun);
+    }
     
     if (message.content.toLowerCase().startsWith(`/bug`)){
         const args = message.content.slice('/bug').split(/ +/);
@@ -371,6 +410,14 @@ bot.on('raw', async event => {
                 if (!field_user || !field_nickname || !field_role || !field_channel){
                     channel.send(`\`[DELETED]\` ${member} \`удалил багнутый запрос.\``);
                 }else{
+                    let permission_role = tagstoperms[field_role.name].split(', ')
+                    let dostup_perm = false;
+                    for (var i = 0; i < permission_role.length; i++){
+                        if (member.roles.some(r => r.name == permission_role[i])) dostup_perm = true;
+                    }
+                    if (!dostup_perm){
+                        return channel.send(`\`[ERROR]\` <@${member.id}> \`у вас нет прав доступа к данной категории.\``);
+                    }
                     channel.send(`\`[DELETED]\` ${member} \`удалил запрос от ${field_nickname}, с ID: ${field_user.id}\``);
                 }
                 if (sened.has(field_nickname)) sened.delete(field_nickname); // Отметить ник, что он не отправлял запрос
@@ -391,12 +438,20 @@ bot.on('raw', async event => {
         }else if(event_emoji_name == "❌"){
             if (message.embeds[0].title == '`Discord » Проверка на валидность ник нейма.`'){
                 if (message.reactions.size != 3){
-                    // return channel.send(`\`[ERROR]\` \`Не торопись! Сообщение еще загружается!\``)
+                    return channel.send(`\`[ERROR]\` \`Не торопись! Сообщение еще загружается!\``)
                 }
                 let field_user = server.members.find(m => "<@" + m.id + ">" == message.embeds[0].fields[0].value.split(/ +/)[1]);
                 let field_nickname = message.embeds[0].fields[1].value.split(`\`Ник:\` `)[1];
                 let field_role = server.roles.find(r => "<@&" + r.id + ">" == message.embeds[0].fields[2].value.split(/ +/)[3]);
                 let field_channel = server.channels.find(c => "<#" + c.id + ">" == message.embeds[0].fields[3].value.split(/ +/)[0]);
+                let permission_role = tagstoperms[field_role.name].split(', ')
+                let dostup_perm = false;
+                for (var i = 0; i < permission_role.length; i++){
+                    if (member.roles.some(r => r.name == permission_role[i])) dostup_perm = true;
+                }
+                if (!dostup_perm){
+                    return channel.send(`\`[ERROR]\` <@${member.id}> \`у вас нет прав доступа к данной категории.\``);
+                }
                 channel.send(`\`[DENY]\` <@${member.id}> \`отклонил запрос от ${field_nickname}, с ID: ${field_user.id}\``);
                 field_channel.send(`<@${field_user.id}>**,** \`модератор\` <@${member.id}> \`отклонил ваш запрос на выдачу роли.\nВозможно ваш никнейм составлен не по форме!\nУстановите ник на: [Фракция] [ранг/10] Имя_Фамилия\``)
                 nrpnames.add(field_nickname); // Добавить данный никнейм в список невалидных
@@ -423,7 +478,7 @@ bot.on('raw', async event => {
         }else if (event_emoji_name == "✔"){
             if (message.embeds[0].title == '`Discord » Проверка на валидность ник нейма.`'){
                 if (message.reactions.size != 3){
-                    // return channel.send(`\`[ERROR]\` \`Не торопись! Сообщение еще загружается!\``)
+                    return channel.send(`\`[ERROR]\` \`Не торопись! Сообщение еще загружается!\``)
                 }
                 let field_user = server.members.find(m => "<@" + m.id + ">" == message.embeds[0].fields[0].value.split(/ +/)[1]);
                 let field_nickname = message.embeds[0].fields[1].value.split(`\`Ник:\` `)[1];
@@ -432,6 +487,14 @@ bot.on('raw', async event => {
                 if (field_user.roles.some(r => field_role.id == r.id)){
                     if (sened.has(field_nickname)) sened.delete(field_nickname); // Отметить ник, что он не отправлял запрос
                     return message.delete(); // Если роль есть, то выход
+                }
+                let permission_role = tagstoperms[field_role.name].split(', ')
+                let dostup_perm = false;
+                for (var i = 0; i < permission_role.length; i++){
+                    if (member.roles.some(r => r.name == permission_role[i])) dostup_perm = true;
+                }
+                if (!dostup_perm){
+                    return channel.send(`\`[ERROR]\` <@${member.id}> \`у вас нет прав доступа к данной категории.\``);
                 }
                 let rolesremoved = false;
                 let rolesremovedcount = 0;
