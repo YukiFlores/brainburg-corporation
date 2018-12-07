@@ -239,7 +239,7 @@ bot.on('message', async message => {
             let nicknametest = message.member.displayName.toLowerCase();
             nicknametest = nicknametest.replace(/ /g, '');
             if (nicknametest.includes("[" + manytags[i].replace(/ /g, '').toLowerCase()) || nicknametest.includes(manytags[i].replace(/ /g, '').toLowerCase() + "]") || nicknametest.includes("(" + manytags[i].replace(/ /g, '').toLowerCase()) || nicknametest.includes(manytags[i].replace(/ /g, '').toLowerCase() + ")") || nicknametest.includes("{" + manytags[i].replace(/ /g, '').toLowerCase()) || nicknametest.includes(manytags[i].replace(/ /g, '').toLowerCase() + "}")){
-                if (nicknametest.includes('ballas' && i == 1) return
+                if (!nicknametest.includes('ballas' && i != 1){
                 let rolename = tags[manytags[i].toUpperCase()] // Указать название роли по соответствию с тэгом
                 let role = message.guild.roles.find(r => r.name == rolename); // Найти эту роль на discord сервере.
                 let reqchat = message.guild.channels.find(c => c.name == `requests-for-roles`); // Найти чат на сервере.
@@ -273,6 +273,7 @@ bot.on('message', async message => {
                 })
                 sened.add(message.member.displayName); // Пометить данный ник, что он отправлял запрос.
                 return message.react(`📨`);
+            }
             }
         }
         if (message.content.toLowerCase().includes("дай")){
