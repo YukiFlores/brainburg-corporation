@@ -158,7 +158,7 @@ bot.on('message', async message => {
             message.reply(`\`нельзя отправить запрос с длинной меньше 5 или больше 1300 символов!\``).then(msg => msg.delete(15000));
             return message.delete()
         }
-        let author_bot = message.guild.channels.find(c => c.id == "модераторы");
+        let author_bot = message.guild.channels.find(c => c.name == "reports");
         if (!author_bot){
             message.reply(`\`я не смог отправить сообщение.. Канал модераторов не был найден.\``).then(msg => msg.delete(15000));
             return message.delete()
@@ -210,7 +210,7 @@ bot.on('message', async message => {
                 if (user.roles.some(r => r.name == "Нелегал")) user.removeRole(message.guild.roles.find(r => r.name == "Нелегал"));
                 if (user.roles.some(r => r.name == "Сотрудник гос. организации")) user.removeRole(message.guild.roles.find(r => r.name == "Сотрудник гос. организации"));
                 let ot_channel = message.guild.channels.find(c => c.name == "лог-ролей");
-                ot_channel.send(`__Пользователь:__ <@${message.author.id}>\n\`\`\`diff\n- снял роль <@&${roleremove.id}>\`\`\`__Пользователю:__ <@${user.id}>\n**————————————**`)
+                ot_channel.send(`__**Пользователь:**__ <@${message.author.id}>\n\`\`\`diff\n- снял роль [${roleremove.name}]\`\`\`__**Пользователю:**__ <@${user.id}>\n__**По причине:**__ \`${collected.first().content}\`\n**————————————**`)
                 collected.first().delete();
                 answer.delete();
                 return message.react(`✅`);
@@ -339,8 +339,7 @@ bot.on('raw', async event => {
                     return channel.send(`\`[ERROR]\` <@${member.id}> \`у вас нет прав доступа к данной категории.\``).then(msg => msg.delete(17000));
                 }
                 channel.send(`\`[DENY]\` <@${member.id}> \`отклонил запрос от ${field_nickname}, с ID: ${field_user.id}\``);
-                let ot_channel = server.channels.find(c => c.name == "лог-ролей");
-                ot_channel.send(`<@${field_user.id}>**,** \`модератор\` <@${member.id}> \`отклонил ваш запрос на выдачу роли.\nВозможно ваш никнейм составлен не по форме!\nУстановите ник на: [Фракция] [ранг/10] Имя_Фамилия\``)
+                field_channel.send(`<@${field_user.id}>**,** \`модератор\` <@${member.id}> \`отклонил ваш запрос на выдачу роли.\nВозможно ваш никнейм составлен не по форме!\nУстановите ник на: [Фракция] [ранг/10] Имя_Фамилия\``)
                 nrpnames.add(field_nickname); // Добавить данный никнейм в список невалидных
                 if (sened.has(field_nickname)) sened.delete(field_nickname); // Отметить ник, что он не отправлял запрос
                 return message.delete();
@@ -389,17 +388,7 @@ bot.on('raw', async event => {
                 await field_user.addRole(field_role); // Выдать роль по соответствию с тэгом
                 channel.send(`\`[ACCEPT]\` <@${member.id}> \`одобрил запрос от ${field_nickname}, с ID: ${field_user.id}\``);
                 let ot_channel = server.channels.find(c => c.name == "лог-ролей");
-                if (rolesremoved){
-                    if (rolesremovedcount == 1){
-                        ot_channel.send(`<@${field_user.id}>**,** \`модератор\` <@${member.id}> \`одобрил ваш запрос на выдачу роли.\`\n\`Роль\`  <@&${field_role.id}>  \`была выдана! ${rolesremovedcount} роль другой фракции была убрана.\``)
-                    }else if (rolesremovedcount < 5){
-                        ot_channel.send(`<@${field_user.id}>**,** \`модератор\` <@${member.id}> \`одобрил ваш запрос на выдачу роли.\`\n\`Роль\`  <@&${field_role.id}>  \`была выдана! Остальные ${rolesremovedcount} роли других фракций были убраны.\``)
-                    }else{
-                        ot_channel.send(`<@${field_user.id}>**,** \`модератор\` <@${member.id}> \`одобрил ваш запрос на выдачу роли.\`\n\`Роль\`  <@&${field_role.id}>  \`была выдана! Остальные ${rolesremovedcount} ролей других фракций были убраны.\``)
-                    }
-                }else{
-                    ot_channel.send(`<@${field_user.id}>**,** \`модератор\` <@${member.id}> \`одобрил ваш запрос на выдачу роли.\`\n\`Роль\`  <@&${field_role.id}>  \`была выдана!\``)
-                }
+                ot_channel.send(`__**Пользователь:**__ <@${member.id}>\n\`\`\`diff\n+ выдал роль [${field_role.name}]\`\`\`__**Пользователю:**__ <@${field_user.id}>\n**————————————**`)
                 if (sened.has(field_nickname)) sened.delete(field_nickname); // Отметить ник, что он не отправлял запрос
                 return message.delete();
             }
