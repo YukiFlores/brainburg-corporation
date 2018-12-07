@@ -7,37 +7,176 @@ const sened = new Set(); // Уже отправленные запросы бу�
 const snyatie = new Set(); // Уже отправленные запросы на снятие роли быдут записаны в snyatie
 
 tags = ({
-    "ПРА-ВО": "✦Сотрудники Правительства✦",
-    "ПРАВ-ВО": "✦Сотрудники Правительства✦",
-    "ПРАВО": "✦Сотрудники Правительства✦",
-    "ГИБДД": "✦Сотрудники ГИБДД✦",
-    "ГУВД": "✦Сотрудники ГУВД✦",
-    "ФСБ": "✦Сотрудники ФСБ✦",
-    "МЗЮ": "✦Сотрудники ВМУ✦",
-    "МЗА": "✦Сотрудники МЗ-А✦",
-    "ВМУ": "✦Сотрудники ВМУ✦",
-    "МЗ-Ю": "✦Сотрудники ВМУ✦",
-    "МЗ-А": "✦Сотрудники МЗ-А✦",
-    "АРМИЯ": "✦Солдаты Армии✦",
-    "ФСИН": "✦Сотрудники ФСИН✦",
-    "МРЭО": "✦Сотрудники МРЭО✦",
-    "ЦБ": "✦Сотрудники Банка✦",
-    "ЖП": "✦Сотрудники РЦ✦",
-    "РЦ": "✦Сотрудники РЦ✦",
-    "СМИ": "✦Сотрудники РЦ✦",
+    "ПРА-ВО": "Сотрудник правительства",
+    "ГЦЛ": "Сотрудник автошколы",
+    "АШ": "Сотрудник автошколы",
+    "ЦБ": "Сотрудник банка",
 
-    "ФМ": "✦Фантомасы✦",
-    "СТ": "✦Санитары✦",
-    "СБ": "✦Солнцевская Братва✦",
-    "ЧК": "✦Чёрные Кошки✦",
-    "КМ": "✦Кавказская Мафия✦",
-    "УМ": "✦Украинская Мафия✦",
-    "РМ": "✦Русская Мафия✦",
+    "FBI": "Сотрудник FBI",
+    "ФБР": "Сотрудник FBI",
+    "LSPD": "Сотрудник LSPD",
+    "ЛСПД": "Сотрудник LSPD",
+    "SFPD": "Сотрудник SFPD",
+    "СФПД": "Сотрудник SFPD",
+    "LVPD": "Сотрудник LVPD",
+    "ЛВПД": "Сотрудник LVPD",
+    "SWAT": "Сотрудник S.W.A.T.",
+    "СВАТ": "Сотрудник S.W.A.T.",
+    "S.W.A.T": "Сотрудник S.W.A.T.",
+    "RCPD": "Сотрудник RCSD",
+    "РКПД": "Сотрудник RCSD",
+    "RCSD": "Сотрудник RCSD",
+    "РКСД": "Сотрудник RCSD",
+
+    "LSA": "Военнослужащий LSa",
+    "ЛСА": "Военнослужащий LSa",
+    "SFA": "Военнослужащий SFa",
+    "СФА": "Военнослужащий SFa",
+    "LS-A": "Военнослужащий LSa",
+    "ЛС-А": "Военнослужащий LSa",
+    "SF-A": "Военнослужащий SFa",
+    "СФ-А": "Военнослужащий SFa",
+    "ТСР": "Сотрудник ТСР",
+    "ТЮРЬМА": "Сотрудник ТСР",
+
+    "LSMC": "Сотрудник LSMC",
+    "ЛСМЦ": "Сотрудник LSMC",
+    "SFMC": "Сотрудник SFMC",
+    "СФМЦ": "Сотрудник SFMC",
+    "LVMC": "Сотрудник LVMC",
+    "ЛВМЦ": "Сотрудник LVMC",
+
+    "R-LS": "Сотрудник LSFM",
+    "RLS": "Сотрудник LSFM",
+    "Р-ЛС": "Сотрудник LSFM",
+    "РЛС": "Сотрудник LSFM",
+    "LSFM": "Сотрудник LSFM",
+    "ЛСФМ": "Сотрудник LSFM",
+    
+    "R-SF": "Сотрудник SFFM",
+    "RSF": "Сотрудник SFFM",
+    "Р-СФ": "Сотрудник SFFM",
+    "РСФ": "Сотрудник SFFM",
+    "SFFM": "Сотрудник SFFM",
+    "СФФМ": "Сотрудник SFFM",
+    
+    "R-LV": "Сотрудник LVFM",
+    "RLV": "Сотрудник LVFM",
+    "Р-ЛВ": "Сотрудник LVFM",
+    "РЛВ": "Сотрудник LVFM",
+    "LVFM": "Сотрудник LVFM",
+    "ЛВФМ": "Сотрудник LVFM",
+
+    "WMC": "Warlock MC",
+    "W-MC": "Warlock MC",
+    "RM": "Russian Mafia",
+    "РМ": "Russian Mafia",
+    "LCN": "La Cosa Nostra",
+    "ЛКН": "La Cosa Nostra",
+    "YAKUZA": "Yakuza",
+    "ЯКУДЗА": "Yakuza",
+
+    "GROVE": "Grove Street",
+    "ГРУВ": "Grove Street",
+    "BALLAS": "Ballas",
+    "БАЛЛАС": "Ballas",
+    "VAGOS": "Vagos",
+    "ВАГОС": "Vagos",
+    "NW": "Night Wolfs",
+    "НВ": "Night Wolfs",
+    "RIFA": "Rifa",
+    "РИФА": "Rifa",
+    "AZTEC": "Aztecas",  
+    "АЦТЕК": "Aztecas",  
 });
-let manytags = ["ПРА-ВО","ПРАВ-ВО","ПРАВО","ГИБДД","ГУВД","ФСБ","МЗЮ","ВМУ","МЗ-Ю","МЗ-А","АРМИЯ","ФСИН","МРЭО","ЦБ","ЖП","РЦ","СМИ","ФМ","СТ","СБ","ЧК","КМ","УМ","РМ",];
-let rolesgg = ["✦Сотрудники Правительства✦", "✦Сотрудники ГИБДД✦", "✦Сотрудники ГУВД✦", "✦Сотрудники ФСБ✦", "✦Сотрудники ВМУ✦", "✦Сотрудники МЗ-А✦", "✦Солдаты Армии✦", "✦Сотрудники ФСИН✦", "✦Сотрудники МРЭО✦", "✦Сотрудники Банка✦", "✦Сотрудники РЦ✦", "✦Фантомасы✦", "✦Санитары✦", "✦Солнцевская Братва✦", "✦Чёрные Кошки✦", "✦Кавказская Мафия✦", "✦Украинская Мафия✦", "✦Русская Мафия✦"]
-let serverid = '465086262383083520';
-let canremoverole = [];
+
+let manytags = [
+"ПРА-ВО",
+"ГЦЛ",
+"АШ",
+"ЦБ",
+
+"FBI",
+"ФБР",
+"LSPD",
+"ЛСПД",
+"SFPD",
+"СФПД",
+"LVPD",
+"ЛВПД",
+"SWAT",
+"СВАТ",
+"S.W.A.T",
+"RCPD",
+"РКПД",
+"RCSD",
+"РКСД",
+
+"LSA",
+"ЛСА",
+"SFA",
+"СФА",
+"LS-A",
+"ЛС-А",
+"SF-A",
+"СФ-А",
+"ТСР",
+"ТЮРЬМА",
+
+"LSMC",
+"ЛСМЦ",
+"SFMC",
+"СФМЦ",
+"LVMC",
+"ЛВМЦ",
+
+"R-LS",
+"RLS",
+"Р-ЛС",
+"РЛС",
+"LSFM",
+"ЛСФМ",
+    
+"R-SF",
+"RSF",
+"Р-СФ",
+"РСФ",
+"SFFM",
+"СФФМ",
+    
+"R-LV",
+"RLV",
+"Р-ЛВ",
+"РЛВ",
+"LVFM",
+"ЛВФМ",
+
+"WMC",
+"W-MC",
+"RM",
+"РМ",
+"LCN",
+"ЛКН",
+"YAKUZA",
+"ЯКУДЗА",
+
+"GROVE",
+"ГРУВ",
+"BALLAS",
+"БАЛЛАС",
+"VAGOS",
+"ВАГОС",
+"NW",
+"НВ",
+"RIFA",
+"РИФА",
+"AZTEC",  
+"АЦТЕК",  
+];
+let rolesgg = ["Сотрудник правительства", "Сотрудник автошколы", "Сотрудник банка", "Сотрудник FBI", "Сотрудник S.W.A.T.", "Сотрудник LSPD", "Сотрудник SFPD", "Сотрудник LVPD", "Сотрудник RCSD", "Сотрудник ТСР", "Военнослужащий LSa", "Военнослужащий SFa", "Сотрудник LSMC", "Сотрудник SFMC", "Сотрудник LVMC", "Сотрудник LSFM", "Сотрудник SFFM",
+"Сотрудник LVFM", "Rifa", "Ballas", "Grove Street", "Vagos", "Night Wolfs", "Aztecas", "Yakuza", "La Cosa Nostra",  "Russian Mafia",  "Warlock MC"]
+let canremoverole = ["Министры", "Лидеры фракций", "Заместители фракций"];
+let serverid = "282282840840732672";
 
 const events = {
     MESSAGE_REACTION_ADD: 'messageReactionAdd',
@@ -78,169 +217,6 @@ bot.on('message', async message => {
         `**Суть обращения:** ${bugreport}`);
         message.reply(`\`хэй! Я отправил твое сообщение на рассмотрение моему боссу робохомячков!\``).then(msg => msg.delete(15000));
         return message.delete();
-    }
-    
-    if (message.content.startsWith("/ffuser")){
-        if (!message.member.hasPermission("MANAGE_ROLES")) return
-        const args = message.content.slice('/ffuser').split(/ +/)
-        if (!args[1]) return
-        let name = args.slice(1).join(" ");
-        let userfinders = false;
-        let foundedusers_nick;
-        let numberff_nick = 0;
-        let foundedusers_tag;
-        let numberff_tag = 0;
-        message.guild.members.filter(userff => {
-            if (userff.displayName.toLowerCase().includes(name.toLowerCase())){
-                if (foundedusers_nick == null){
-                    foundedusers_nick = `${numberff_nick + 1}) <@${userff.id}>`
-                }else{
-                    foundedusers_nick = foundedusers_nick + `\n${numberff_nick + 1}) <@${userff.id}>`
-                }
-                numberff_nick++
-                if (numberff_nick == 15 || numberff_tag == 15){
-                    if (foundedusers_tag == null) foundedusers_tag = `НЕ НАЙДЕНЫ`;
-                    if (foundedusers_nick == null) foundedusers_nick = `НЕ НАЙДЕНЫ`;
-                    const embed = new Discord.RichEmbed()
-                    .addField(`BY NICKNAME`, foundedusers_nick, true)
-                    .addField("BY DISCORD TAG", foundedusers_tag, true)
-                    message.reply(`\`по вашему запросу найдена следующая информация:\``, embed); 
-                    numberff_nick = 0;
-                    numberff_tag = 0;
-                    foundedusers_tag = null;
-                    foundedusers_nick = null;
-                }
-                if (!userfinders) userfinders = true;
-            }else if (userff.user.tag.toLowerCase().includes(name.toLowerCase())){
-                if (foundedusers_tag == null){
-                    foundedusers_tag = `${numberff_tag + 1}) <@${userff.id}>`
-                }else{
-                    foundedusers_tag = foundedusers_tag + `\n${numberff_tag + 1}) <@${userff.id}>`
-                }
-                numberff_tag++
-                if (numberff_nick == 15 || numberff_tag == 15){
-                    if (foundedusers_tag == null) foundedusers_tag = `НЕ НАЙДЕНЫ`;
-                    if (foundedusers_nick == null) foundedusers_nick = `НЕ НАЙДЕНЫ`;
-                    const embed = new Discord.RichEmbed()
-                    .addField(`BY NICKNAME`, foundedusers_nick, true)
-                    .addField("BY DISCORD TAG", foundedusers_tag, true)
-                    message.reply(`\`по вашему запросу найдена следующая информация:\``, embed); 
-                    numberff_nick = 0;
-                    numberff_tag = 0;
-                    foundedusers_tag = null;
-                    foundedusers_nick = null;
-                }
-                if (!userfinders) userfinders = true;
-            }
-        })
-        if (!userfinders) return message.reply(`я никого не нашел.`) && message.delete()
-        if (numberff_nick != 0 || numberff_tag != 0){
-            if (foundedusers_tag == null) foundedusers_tag = `НЕ НАЙДЕНЫ`;
-            if (foundedusers_nick == null) foundedusers_nick = `НЕ НАЙДЕНЫ`;
-            const embed = new Discord.RichEmbed()
-            .addField(`BY NICKNAME`, foundedusers_nick, true)
-            .addField("BY DISCORD TAG", foundedusers_tag, true)
-            message.reply(`\`по вашему запросу найдена следующая информация:\``, embed); 
-        }
-    }
-
-    if (message.content.startsWith("/accinfo")){
-        if (!message.member.hasPermission("MANAGE_ROLES")) return
-        let user = message.guild.member(message.mentions.users.first());
-        if (user){
-            let userroles;
-            await user.roles.filter(role => {
-                if (userroles == undefined){
-                    if (!role.name.includes("everyone")) userroles = `<@&${role.id}>`
-                }else{
-                    if (!role.name.includes("everyone")) userroles = userroles + `, <@&${role.id}>`
-                }
-            })
-            let perms;
-            if (user.permissions.hasPermission("ADMINISTRATOR") || user.permissions.hasPermission("MANAGE_ROLES")){
-                perms = "[!] Пользователь модератор [!]";
-            }else{
-                perms = "У пользователя нет админ прав."
-            }
-            if (userroles == undefined){
-                userroles = `отсутствуют.`
-            }
-            let date = user.user.createdAt;
-            let registed = `${date.getFullYear()}.${(date.getMonth() + 1).toString().padStart(2, '0')}.${date.getDate().toString().padStart(2, '0')} ${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}:${date.getSeconds().toString().padStart(2, '0')}`
-            date = user.joinedAt
-            let joindate = `${date.getFullYear()}.${(date.getMonth() + 1).toString().padStart(2, '0')}.${date.getDate().toString().padStart(2, '0')} ${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}:${date.getSeconds().toString().padStart(2, '0')}`
-            const embed = new Discord.RichEmbed()
-            .setColor("#FF0000")
-            .setFooter(`Аккаунт пользователя: ${user.displayName}`, user.user.avatarURL)
-            .setTimestamp()
-            .addField(`Дата создания аккаунта и входа на сервер`, `**Аккаунт создан:** \`${registed}\`\n**Вошел к нам:** \`${joindate}\``)
-            .addField("Roles and Permissions", `**Роли:** ${userroles}\n**PERMISSIONS:** \`${perms}\``)
-            message.reply(`**вот информация по поводу аккаунта <@${user.id}>**`, embed)
-            return message.delete();
-        }else{
-            const args = message.content.slice('/accinfo').split(/ +/)
-            if (!args[1]) return
-            let name = args.slice(1).join(" ");
-            let foundmember = false;
-            await message.guild.members.filter(f_member => {
-                if (f_member.displayName.includes(name)){
-                    foundmember = f_member
-                }else if(f_member.user.tag.includes(name)){
-                    foundmember = f_member
-                }
-            })
-            if (foundmember){
-                let user = foundmember
-                let userroles;
-                await user.roles.filter(role => {
-                    if (userroles == undefined){
-                        if (!role.name.includes("everyone")) userroles = `<@&${role.id}>`
-                    }else{
-                        if (!role.name.includes("everyone")) userroles = userroles + `, <@&${role.id}>`
-                    }
-                })
-                let perms;
-                if (user.permissions.hasPermission("ADMINISTRATOR") || user.permissions.hasPermission("MANAGE_ROLES")){
-                    perms = "[!] Пользователь модератор [!]";
-                }else{
-                    perms = "У пользователя нет админ прав."
-                }
-                if (userroles == undefined){
-                    userroles = `отсутствуют.`
-                }
-                let date = user.user.createdAt;
-                let registed = `${date.getFullYear()}.${(date.getMonth() + 1).toString().padStart(2, '0')}.${date.getDate().toString().padStart(2, '0')} ${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}:${date.getSeconds().toString().padStart(2, '0')}`
-                date = user.joinedAt
-                let joindate = `${date.getFullYear()}.${(date.getMonth() + 1).toString().padStart(2, '0')}.${date.getDate().toString().padStart(2, '0')} ${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}:${date.getSeconds().toString().padStart(2, '0')}`
-                const embed = new Discord.RichEmbed()
-                .setColor("#FF0000")
-                .setFooter(`Аккаунт пользователя: ${user.displayName}`, user.user.avatarURL)
-                .setTimestamp()
-                .addField(`Краткая информация`, `**Аккаунт создан:** \`${registed}\`\n**Вошел к нам:** \`${joindate}\``)
-                .addField("Roles and Permissions", `**Роли:** ${userroles}\n**PERMISSIONS:** \`${perms}\``)
-                message.reply(`**вот информация по поводу аккаунта <@${user.id}>**`, embed)
-            }
-            return message.delete();
-        }
-    }
-    
-    if (message.content.startsWith(`/changenick`)){
-        const args = message.content.slice('/changenick').split(/ +/)
-        if (message.member.id != `336207279412215809` && !message.member.hasPermission("MANAGE_ROLES")) return
-        let user = message.guild.member(message.mentions.users.first());
-        if (!user) return message.delete();
-        if (!args[2]) return message.delete();
-        let nicknameuser = user.displayName;
-        let changenick = args.slice(2).join(" ");
-        message.delete();
-        let msg = await message.channel.send(`<@${user.id}>, \`пользователь\` <@${message.author.id}> \`предлагает сменить ваш никнем на '${changenick}'!\nНажмите галочку в течение 15 секунд если вы согласны!\``)
-        await msg.react(`✔`);
-        const reactions = await msg.awaitReactions(reaction => reaction.emoji.name === `✔`, {time: 15000});
-        let reacton = reactions.get(`✔`).users.get(user.id)
-        if (reacton == undefined) return msg.delete()
-        user.setNickname(changenick);
-        message.channel.send(`<@${user.id}>, \`ваш никнейм был сменен с '${nicknameuser}' на '${changenick}'. Для получения роли напишите в чат слово: 'роль'.\``).then(mes => mes.delete(60000));
-        return msg.delete();
     }
     
     if (message.content.toLowerCase().includes("сними") || message.content.toLowerCase().includes("снять")){
