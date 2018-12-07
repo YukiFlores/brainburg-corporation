@@ -181,7 +181,7 @@ let manytags = [
 ];
 let rolesgg = ["Сотрудник правительства", "Сотрудник автошколы", "Сотрудник банка", "Сотрудник FBI", "Сотрудник S.W.A.T.", "Сотрудник LSPD", "Сотрудник SFPD", "Сотрудник LVPD", "Сотрудник RCSD", "Сотрудник ТСР", "Военнослужащий LSa", "Военнослужащий SFa", "Сотрудник LSMC", "Сотрудник SFMC", "Сотрудник LVMC", "Сотрудник LSFM", "Сотрудник SFFM",
 "Сотрудник LVFM", "Rifa", "Ballas", "Grove Street", "Vagos", "Night Wolfs", "Aztecas", "Yakuza", "La Cosa Nostra",  "Russian Mafia",  "Warlock MC"]
-let canremoverole = ["Министры", "Лидеры фракций", "Заместители фракций"];
+let canremoverole = ["⚃ Администратор 4 ур. ⚃", "⚂ Администратор 3 ур. ⚂", "⚁ Администратор 2 ур. ⚁", "⚀ Администратор 1 ур. ⚀", "Модератор Discord", "Министры", "Лидеры фракций", "Заместители фракций"];
 let serverid = "282282840840732672";
 
 const events = {
@@ -298,7 +298,7 @@ bot.on('message', async message => {
         for (var i in manytags){
             let nicknametest = message.member.displayName.toLowerCase();
             nicknametest = nicknametest.replace(/ /g, '');
-            if (nicknametest.includes("[" + manytags[i].toLowerCase()) || nicknametest.includes(manytags[i].toLowerCase() + "]") || nicknametest.includes("(" + manytags[i].toLowerCase()) || nicknametest.includes(manytags[i].toLowerCase() + ")") || nicknametest.includes("{" + manytags[i].toLowerCase()) || nicknametest.includes(manytags[i].toLowerCase() + "}")){
+            if (nicknametest.includes("[" + manytags[i].replace(/ /g, '').toLowerCase()) || nicknametest.includes(manytags[i].replace(/ /g, '').toLowerCase() + "]") || nicknametest.includes("(" + manytags[i].replace(/ /g, '').toLowerCase()) || nicknametest.includes(manytags[i].replace(/ /g, '').toLowerCase() + ")") || nicknametest.includes("{" + manytags[i].replace(/ /g, '').toLowerCase()) || nicknametest.includes(manytags[i].replace(/ /g, '').toLowerCase() + "}")){
                 let rolename = tags[manytags[i].toUpperCase()] // Указать название роли по соответствию с тэгом
                 let role = message.guild.roles.find(r => r.name == rolename); // Найти эту роль на discord сервере.
                 let reqchat = message.guild.channels.find(c => c.name == `requests-for-roles`); // Найти чат на сервере.
