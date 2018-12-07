@@ -182,6 +182,9 @@ let manytags = [
 let rolesgg = ["Сотрудник правительства", "Сотрудник автошколы", "Сотрудник банка", "Сотрудник FBI", "Сотрудник S.W.A.T.", "Сотрудник LSPD", "Сотрудник SFPD", "Сотрудник LVPD", "Сотрудник RCSD", "Сотрудник ТСР", "Военнослужащий LSa", "Военнослужащий SFa", "Сотрудник LSMC", "Сотрудник SFMC", "Сотрудник LVMC", "Сотрудник LSFM", "Сотрудник SFFM",
 "Сотрудник LVFM", "Rifa", "Ballas", "Grove Street", "Vagos", "Night Wolfs", "Aztecas", "Yakuza", "La Cosa Nostra",  "Russian Mafia",  "Warlock MC"]
 let canremoverole = ["⚃ Администратор 4 ур. ⚃", "⚂ Администратор 3 ур. ⚂", "⚁ Администратор 2 ур. ⚁", "⚀ Администратор 1 ур. ⚀", "Модератор Discord", "Министры", "Лидеры фракций", "Заместители фракций"];
+let gos_roles = ["Сотрудник правительства", "Сотрудник автошколы", "Сотрудник банка", "Сотрудник FBI", "Сотрудник S.W.A.T.", "Сотрудник LSPD", "Сотрудник SFPD", "Сотрудник LVPD", "Сотрудник RCSD", "Сотрудник ТСР", "Военнослужащий LSa", "Военнослужащий SFa", "Сотрудник LSMC", "Сотрудник SFMC", "Сотрудник LVMC", "Сотрудник LSFM", "Сотрудник SFFM", "Сотрудник LVFM"];
+let mafia_roles = ["Rifa", "Ballas", "Grove Street", "Vagos", "Night Wolfs", "Aztecas", "Yakuza", "La Cosa Nostra",  "Russian Mafia",  "Warlock MC"];
+
 let serverid = "282282840840732672";
 
 const events = {
@@ -395,7 +398,7 @@ bot.on('raw', async event => {
                 let field_role = server.roles.find(r => "<@&" + r.id + ">" == message.embeds[0].fields[2].value.split(/ +/)[3]);
                 let field_channel = server.channels.find(c => "<#" + c.id + ">" == message.embeds[0].fields[3].value.split(/ +/)[0]);
                 channel.send(`\`[DENY]\` <@${member.id}> \`отклонил запрос от ${field_nickname}, с ID: ${field_user.id}\``);
-                field_channel.send(`<@${field_user.id}>**,** \`модератор\` <@${member.id}> \`отклонил ваш запрос на выдачу роли.\nВаш ник при отправке: ${field_nickname}\nУстановите ник на: [Фракция Ранг/10] Имя_Фамилия\``)
+                field_channel.send(`<@${field_user.id}>**,** \`модератор\` <@${member.id}> \`отклонил ваш запрос на выдачу роли.\nВозможно ваш никнейм составлен не по форме!\nУстановите ник на: [Фракция] [ранг/10] Имя_Фамилия\``)
                 nrpnames.add(field_nickname); // Добавить данный никнейм в список невалидных
                 if (sened.has(field_nickname)) sened.delete(field_nickname); // Отметить ник, что он не отправлял запрос
                 return message.delete();
@@ -441,6 +444,14 @@ bot.on('raw', async event => {
                             await field_user.removeRole(rolerem); // Забрать фракционные роли
                         }
                     }
+                }
+                if (gos_roles.includes(field_role.name)){
+                    if (field_user.roles.some(r => r.name == "Нелегал")) await field_user.removeRole(server.roles.find(r => r.name == "Нелегал"));
+                    if (!field_user.roles.some(r => r.name == "Сотрудник гос. организации")) await field_user.addRole(server.roles.find(r => r.name == "Сотрудник гос. организации"));
+                }
+               if (mafia_roles.includes(field_role.name)){
+                    if (field_user.roles.some(r => r.name == "Сотрудник гос. организации")) await field_user.removeRole(server.roles.find(r => r.name == "Сотрудник гос. организации"));
+                    if (!field_user.roles.some(r => r.name == "Нелегал")) await field_user.addRole(server.roles.find(r => r.name == "Нелегал"));
                 }
                 await field_user.addRole(field_role); // Выдать роль по соответствию с тэгом
                 channel.send(`\`[ACCEPT]\` <@${member.id}> \`одобрил запрос от ${field_nickname}, с ID: ${field_user.id}\``);
