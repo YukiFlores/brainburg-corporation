@@ -305,8 +305,12 @@ bot.on('message', async message => {
             }).then((collected) => {
                 reqchat.send(`\`[REMOVE]\` <@${message.member.id}> \`снял роль\` <@&${roleremove.id}> \`пользователю\` <@${user.id}> \`по причине: ${collected.first().content}\``);
                 user.removeRole(roleremove);
+                if (user.roles.some(r => r.name == "Нелегал")) user.removeRole(message.guild.roles.find(r => r.name == "Нелегал"));
+                if (user.roles.some(r => r.name == "Сотрудник гос. организации")) user.removeRole(message.guild.roles.find(r => r.name == "Сотрудник гос. организации"));
                 let ot_channel = message.guild.channels.find(c => c.name == "🌐welcome");
-                ot_channel.send(`<@${user.id}>, \`с вас сняли роль\`  <@&${roleremove.id}>  \`по причине: ${collected.first().content} Источник:\` <@${message.author.id}>`)
+                ot_channel.send(`<@${user.id}>, \`с вас сняли роль\`  <@&${roleremove.id}>  \`по причине: ${collected.first().content} Источник:\` <@${message.author.id}>`).catch(err => message.reply(`\`я не смог сказать пользователю, что у него сняли роль в общий чат. Возможно нет прав доступа.\``));
+                collected.first().delete();
+                answer.delete();
                 return message.react(`✅`);
             }).catch(() => {
                 return answer.delete()
