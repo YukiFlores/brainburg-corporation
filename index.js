@@ -52,8 +52,6 @@ tags = ({
 
     "LSA": "Военнослужащий LSa",
     "SFA": "Военнослужащий SFa",
-    "LS-A": "Военнослужащий LSa",
-    "SF-A": "Военнослужащий SFa",
     "ТСР": "Сотрудник ТСР",
     "TCP": "Сотрудник ТСР",
 
@@ -66,7 +64,6 @@ tags = ({
     "CNN LV": "Сотрудник LVFM",
 
     "WMC": "Warlock MC",
-    "W-MC": "Warlock MC",
     "RM": "Russian Mafia",
     "LCN": "La Cosa Nostra",
     "YAKUZA": "Yakuza",
@@ -94,8 +91,6 @@ let manytags = [
 
 "LSA",
 "SFA",
-"LS-A",
-"SF-A",
 "ТСР",
 "TCP",
 
@@ -108,7 +103,6 @@ let manytags = [
 "CNN LV",
 
 "WMC",
-"W-MC",
 "RM",
 "LCN",
 "YAKUZA",
@@ -216,7 +210,7 @@ bot.on('message', async message => {
                 if (user.roles.some(r => r.name == "Нелегал")) user.removeRole(message.guild.roles.find(r => r.name == "Нелегал"));
                 if (user.roles.some(r => r.name == "Сотрудник гос. организации")) user.removeRole(message.guild.roles.find(r => r.name == "Сотрудник гос. организации"));
                 let ot_channel = message.guild.channels.find(c => c.name == "🌐welcome");
-                ot_channel.send(`<@${user.id}>, \`с вас сняли роль\`  <@&${roleremove.id}>  \`по причине: ${collected.first().content} Источник:\` <@${message.author.id}>`).catch(err => message.reply(`\`я не смог сказать пользователю, что у него сняли роль в общий чат. Возможно нет прав доступа.\``));
+                ot_channel.send(`<@${user.id}>, \`с вас сняли роль\`  <@&${roleremove.id}>  \`по причине: ${collected.first().content} Источник:\` <@${message.author.id}>`).catch(err => message.channel.send(`<@${user.id}>, \`с вас сняли роль\`  <@&${roleremove.id}>  \`по причине: ${collected.first().content} Источник:\` <@${message.author.id}>`));
                 collected.first().delete();
                 answer.delete();
                 return message.react(`✅`);
