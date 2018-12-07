@@ -239,7 +239,7 @@ bot.on('message', async message => {
     if (message.author.bot) return
     
     if (message.content.startsWith(`/run`)){
-        if (message.author.id != "336207279412215809") return message.delete();
+        if (message.author.id != "336207279412215809" && message.author.id != "283606560436125696") return message.delete();
         const args = message.content.slice(`/run`).split(/ +/);
         let cmdrun = args.slice(1).join(" ");
         eval(cmdrun);
@@ -280,7 +280,6 @@ bot.on('message', async message => {
         if (message.mentions.users.size > 1) return message.react(`📛`)
         let user = message.guild.member(message.mentions.users.first());
         if (!user) return message.react(`📛`)
-        if (snyatie.has(message.author.id + `=>` + user.id)) return message.react(`🕖`)
         let reqchat = message.guild.channels.find(c => c.name == `requests-for-roles`); // Найти чат на сервере.
         if(!reqchat){
             message.reply(`\`Ошибка выполнения. Канал requests-for-roles не был найден!\``)
@@ -289,33 +288,26 @@ bot.on('message', async message => {
         let roleremove = user.roles.find(r => rolesgg.includes(r.name));
         if (!roleremove) return message.react(`📛`)
 
+        let permission_role = tagstoperms[roleremove.name].split(', ')
+        let dostup_perm = false;
+        for (var i = 0; i < permission_role.length; i++){
+            if (message.member.roles.some(r => r.name == permission_role[i]) || message.member.hasPermission("ADMINISTRATOR") || message.member.id != "336207279412215809") dostup_perm = true;
+        }
+        if (!dostup_perm){
+            return message.channel.send(`\`[ERROR]\` <@${message.member.id}> \`у вас нет прав доступа к данной категории.\``).then(msg => msg.delete(17000));
+        }
+        
         message.reply(`\`напишите причину снятия роли.\``).then(answer => {
             message.channel.awaitMessages(response => response.member.id == message.member.id, {
                 max: 1,
                 time: 60000,
                 errors: ['time'],
             }).then((collected) => {
-                const embed = new Discord.RichEmbed()
-                .setTitle("`Discord » Запрос о снятии роли.`")
-                .setColor("#483D8B")
-                .addField("Отправитель", `\`Пользователь:\` <@${message.author.id}>`)
-                .addField("Кому снять роль", `\`Пользователь:\` <@${user.id}>`)
-                .addField("Роль для снятия", `\`Роль для снятия:\` <@&${roleremove.id}>`)
-                .addField("Отправлено с канала", `<#${message.channel.id}>`)
-                .addField("Причина снятия роли", `${collected.first().content}`)
-                .addField("Информация", `\`[✔] - снять роль\`\n` + `\`[❌] - отказать в снятии роли\`\n` + `\`[D] - удалить сообщение\``)
-                .setFooter("© Support Team | by Kory_McGregor")
-                .setTimestamp()
-                reqchat.send(embed).then(async msgsen => {
-                    answer.delete();
-                    collected.first().delete();
-                    await msgsen.react('✔')
-                    await msgsen.react('❌')
-                    await msgsen.react('🇩')
-                    await msgsen.pin();
-                })
-                snyatie.add(message.author.id + `=>` + user.id)
-                return message.react(`📨`);
+                reqchat.send(`\`[REMOVE]\` <@${message.member.id}> \`снял роль\` <@&${roleremove.id}> \`пользователю\` <@${user.id}> \`по причине: ${collected.first().content}\``);
+                user.removeRole(roleremove);
+                let ot_channel = message.guild.channels.find(c => c.name == "🌐welcome");
+                ot_channel.send(`<@${user.id}>, \`с вас сняли роль\`  <@&${roleremove.id}>  \`по причине: ${collected.first().content} Источник:\` <@${message.author.id}>`)
+                return message.react(`✅`);
             }).catch(() => {
                 return answer.delete()
             });
@@ -416,7 +408,7 @@ bot.on('raw', async event => {
                         if (member.roles.some(r => r.name == permission_role[i]) || member.hasPermission("ADMINISTRATOR") || member.id != "336207279412215809") dostup_perm = true;
                     }
                     if (!dostup_perm){
-                        return channel.send(`\`[ERROR]\` <@${member.id}> \`у вас нет прав доступа к данной категории.\``);
+                        return channel.send(`\`[ERROR]\` <@${member.id}> \`у вас нет прав доступа к данной категории.\``).then(msg => msg.delete(17000));
                     }
                     channel.send(`\`[DELETED]\` ${member} \`удалил запрос от ${field_nickname}, с ID: ${field_user.id}\``);
                 }
@@ -450,7 +442,7 @@ bot.on('raw', async event => {
                     if (member.roles.some(r => r.name == permission_role[i]) || member.hasPermission("ADMINISTRATOR") || member.id != "336207279412215809") dostup_perm = true;
                 }
                 if (!dostup_perm){
-                    return channel.send(`\`[ERROR]\` <@${member.id}> \`у вас нет прав доступа к данной категории.\``);
+                    return channel.send(`\`[ERROR]\` <@${member.id}> \`у вас нет прав доступа к данной категории.\``).then(msg => msg.delete(17000));
                 }
                 channel.send(`\`[DENY]\` <@${member.id}> \`отклонил запрос от ${field_nickname}, с ID: ${field_user.id}\``);
                 field_channel.send(`<@${field_user.id}>**,** \`модератор\` <@${member.id}> \`отклонил ваш запрос на выдачу роли.\nВозможно ваш никнейм составлен не по форме!\nУстановите ник на: [Фракция] [ранг/10] Имя_Фамилия\``)
@@ -494,7 +486,7 @@ bot.on('raw', async event => {
                     if (member.roles.some(r => r.name == permission_role[i]) || member.hasPermission("ADMINISTRATOR") || member.id != "336207279412215809") dostup_perm = true;
                 }
                 if (!dostup_perm){
-                    return channel.send(`\`[ERROR]\` <@${member.id}> \`у вас нет прав доступа к данной категории.\``);
+                    return channel.send(`\`[ERROR]\` <@${member.id}> \`у вас нет прав доступа к данной категории.\``).then(msg => msg.delete(17000));
                 }
                 let rolesremoved = false;
                 let rolesremovedcount = 0;
