@@ -275,7 +275,7 @@ bot.on('message', async message => {
             }
         }
         if (message.content.toLowerCase().includes("дай")){
-            if (snyatie.has(message.author.id){
+            if (snyatie.has(message.author.id)){
                 return message.react(`📛`); 
             }else{
                 snyatie.add(message.author.id);
