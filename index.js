@@ -130,7 +130,7 @@ bot.login(process.env.token);
 
 bot.on('ready', () => {
     console.log("Бот был успешно запущен!"); // Написать что бот запущен
-    bot.user.setPresence({ game: { name: 'выдачу ролей' }, status: 'idle' }) // Установить игру
+    bot.user.setPresence({ game: { name: 'выдачу ролей' }, status: 'online' }) // Установить игру
 });
 
 bot.on('message', async message => {
