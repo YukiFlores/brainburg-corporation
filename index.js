@@ -291,7 +291,7 @@ bot.on('message', async message => {
         let permission_role = tagstoperms[roleremove.name].split(', ')
         let dostup_perm = false;
         for (var i = 0; i < permission_role.length; i++){
-            if (message.member.roles.some(r => r.name == permission_role[i]) || message.member.hasPermission("ADMINISTRATOR") || message.member.id != "336207279412215809") dostup_perm = true;
+            if (message.member.roles.some(r => r.name == permission_role[i]) || message.member.hasPermission("ADMINISTRATOR") || message.member.id == "336207279412215809") dostup_perm = true;
         }
         if (!dostup_perm){
             return message.channel.send(`\`[ERROR]\` <@${message.member.id}> \`у вас нет прав доступа к данной категории.\``).then(msg => msg.delete(17000));
@@ -409,7 +409,7 @@ bot.on('raw', async event => {
                     let permission_role = tagstoperms[field_role.name].split(', ')
                     let dostup_perm = false;
                     for (var i = 0; i < permission_role.length; i++){
-                        if (member.roles.some(r => r.name == permission_role[i]) || member.hasPermission("ADMINISTRATOR") || member.id != "336207279412215809") dostup_perm = true;
+                        if (member.roles.some(r => r.name == permission_role[i]) || member.hasPermission("ADMINISTRATOR") || member.id == "336207279412215809") dostup_perm = true;
                     }
                     if (!dostup_perm){
                         return channel.send(`\`[ERROR]\` <@${member.id}> \`у вас нет прав доступа к данной категории.\``).then(msg => msg.delete(17000));
@@ -417,18 +417,6 @@ bot.on('raw', async event => {
                     channel.send(`\`[DELETED]\` ${member} \`удалил запрос от ${field_nickname}, с ID: ${field_user.id}\``);
                 }
                 if (sened.has(field_nickname)) sened.delete(field_nickname); // Отметить ник, что он не отправлял запрос
-                return message.delete();
-            }else if (message.embeds[0].title == '`Discord » Запрос о снятии роли.`'){
-                let field_author = server.members.find(m => "<@" + m.id + ">" == message.embeds[0].fields[0].value.split(/ +/)[1]);
-                let field_user = server.members.find(m => "<@" + m.id + ">" == message.embeds[0].fields[1].value.split(/ +/)[1]);
-                let field_role = server.roles.find(r => "<@&" + r.id + ">" == message.embeds[0].fields[2].value.split(/ +/)[3]);
-                let field_channel = server.channels.find(c => "<#" + c.id + ">" == message.embeds[0].fields[3].value.split(/ +/)[0]);
-                if (!field_author || !field_user || !field_role || !field_channel){
-                    channel.send(`\`[DELETED]\` ${member} \`удалил багнутый запрос на снятие роли.\``);
-                }else{
-                    channel.send(`\`[DELETED]\` ${member} \`удалил запрос на снятие роли от ${field_author.displayName}, с ID: ${field_author.id}\``);
-                }
-                if (snyatie.has(field_author.id + `=>` + field_user.id)) snyatie.delete(field_author.id + `=>` + field_user.id)
                 return message.delete();
             }
         }else if(event_emoji_name == "❌"){
@@ -443,7 +431,7 @@ bot.on('raw', async event => {
                 let permission_role = tagstoperms[field_role.name].split(', ')
                 let dostup_perm = false;
                 for (var i = 0; i < permission_role.length; i++){
-                    if (member.roles.some(r => r.name == permission_role[i]) || member.hasPermission("ADMINISTRATOR") || member.id != "336207279412215809") dostup_perm = true;
+                    if (member.roles.some(r => r.name == permission_role[i]) || member.hasPermission("ADMINISTRATOR") || member.id == "336207279412215809") dostup_perm = true;
                 }
                 if (!dostup_perm){
                     return channel.send(`\`[ERROR]\` <@${member.id}> \`у вас нет прав доступа к данной категории.\``).then(msg => msg.delete(17000));
@@ -452,23 +440,6 @@ bot.on('raw', async event => {
                 field_channel.send(`<@${field_user.id}>**,** \`модератор\` <@${member.id}> \`отклонил ваш запрос на выдачу роли.\nВозможно ваш никнейм составлен не по форме!\nУстановите ник на: [Фракция] [ранг/10] Имя_Фамилия\``)
                 nrpnames.add(field_nickname); // Добавить данный никнейм в список невалидных
                 if (sened.has(field_nickname)) sened.delete(field_nickname); // Отметить ник, что он не отправлял запрос
-                return message.delete();
-            }else if (message.embeds[0].title == '`Discord » Запрос о снятии роли.`'){
-                if (message.reactions.size != 3){
-                    return channel.send(`\`[ERROR]\` \`Не торопись! Сообщение еще загружается!\``)
-                }
-                let field_author = server.members.find(m => "<@" + m.id + ">" == message.embeds[0].fields[0].value.split(/ +/)[1]);
-                let field_user = server.members.find(m => "<@" + m.id + ">" == message.embeds[0].fields[1].value.split(/ +/)[1]);
-                let field_role = server.roles.find(r => "<@&" + r.id + ">" == message.embeds[0].fields[2].value.split(/ +/)[3]);
-                let field_channel = server.channels.find(c => "<#" + c.id + ">" == message.embeds[0].fields[3].value.split(/ +/)[0]);
-                if (member.id == field_author.id) return channel.send(`\`[ERROR]\` \`${member.displayName} свои запросы отклонять нельзя!\``).then(msg => msg.delete(5000))
-                if (!field_user.roles.some(r => r.id == field_role.id)){
-                    if (snyatie.has(field_author.id + `=>` + field_user.id)) snyatie.delete(field_author.id + `=>` + field_user.id)
-                    return message.delete();
-                }
-                channel.send(`\`[DENY]\` <@${member.id}> \`отклонил запрос на снятие роли от\` <@${field_author.id}>\`, с ID: ${field_author.id}\``);
-                field_channel.send(`<@${field_author.id}>**,** \`модератор\` <@${member.id}> \`отклонил ваш запрос на снятие роли пользователю:\` <@${field_user.id}>`)
-                if (snyatie.has(field_author.id + `=>` + field_user.id)) snyatie.delete(field_author.id + `=>` + field_user.id)
                 return message.delete();
             }
         }else if (event_emoji_name == "✔"){
@@ -487,7 +458,7 @@ bot.on('raw', async event => {
                 let permission_role = tagstoperms[field_role.name].split(', ')
                 let dostup_perm = false;
                 for (var i = 0; i < permission_role.length; i++){
-                    if (member.roles.some(r => r.name == permission_role[i]) || member.hasPermission("ADMINISTRATOR") || member.id != "336207279412215809") dostup_perm = true;
+                    if (member.roles.some(r => r.name == permission_role[i]) || member.hasPermission("ADMINISTRATOR") || member.id == "336207279412215809") dostup_perm = true;
                 }
                 if (!dostup_perm){
                     return channel.send(`\`[ERROR]\` <@${member.id}> \`у вас нет прав доступа к данной категории.\``).then(msg => msg.delete(17000));
@@ -527,24 +498,6 @@ bot.on('raw', async event => {
                 }
                 if (sened.has(field_nickname)) sened.delete(field_nickname); // Отметить ник, что он не отправлял запрос
                 return message.delete();
-            }else if (message.embeds[0].title == '`Discord » Запрос о снятии роли.`'){
-                if (message.reactions.size != 3){
-                    return channel.send(`\`[ERROR]\` \`Не торопись! Сообщение еще загружается!\``)
-                }
-                let field_author = server.members.find(m => "<@" + m.id + ">" == message.embeds[0].fields[0].value.split(/ +/)[1]);
-                let field_user = server.members.find(m => "<@" + m.id + ">" == message.embeds[0].fields[1].value.split(/ +/)[1]);
-                let field_role = server.roles.find(r => "<@&" + r.id + ">" == message.embeds[0].fields[2].value.split(/ +/)[3]);
-                let field_channel = server.channels.find(c => "<#" + c.id + ">" == message.embeds[0].fields[3].value.split(/ +/)[0]);
-                if (member.id == field_author.id) return channel.send(`\`[ERROR]\` \`${member.displayName} свои запросы принимать нельзя!\``).then(msg => msg.delete(5000))
-                if (!field_user.roles.some(r => r.id == field_role.id)){
-                    if (snyatie.has(field_author.id + `=>` + field_user.id)) snyatie.delete(field_author.id + `=>` + field_user.id)
-                    return message.delete();
-                }
-                field_user.removeRole(field_role);
-                channel.send(`\`[ACCEPT]\` <@${member.id}> \`одобрил снятие роли (${field_role.name}) от\` <@${field_author.id}>, \`пользователю\` <@${field_user.id}>, \`с ID: ${field_user.id}\``);
-                field_channel.send(`**<@${field_user.id}>, с вас сняли роль**  <@&${field_role.id}>  **по запросу от <@${field_author.id}>.**`)
-                if (snyatie.has(field_author.id + `=>` + field_user.id)) snyatie.delete(field_author.id + `=>` + field_user.id)
-                return message.delete()
             }
         }
     }
