@@ -142,24 +142,38 @@ bot.on('message', async message => {
     if (message.author.bot) return
     
     if (message.content.startsWith("/mban")){
-        if (!message.member.roles.some(r => r.name == "Модератор Discord")) return
+        if (!message.member.roles.some(r => r.name == "Модератор Discord") && !message.member.hasPermission("ADMINISTRATOR")) return
+        let moderation_channel = message.guild.channels.find(c => c.name == "модераторы");
+        if (!moderation_channel) return message.delete();
         let user = message.guild.member(message.mentions.users.first());
         if (!user){
-            message.reply(`\`вы не указали пользователя! '/mban [user] [причина]\``).then(msg => msg.delete(12000));
+            message.reply(`\`вы не указали пользователя! '/mban [user] [причина]'\``).then(msg => msg.delete(12000));
             return message.delete();
+        }
+        if (user.hasPermission("ADMINISTRATOR") || user.roles.some(r => ["Модератор Discord", "⚀ Администратор 1 ур. ⚀", "⚁ Администратор 2 ур. ⚁", "⚂ Администратор 3 ур. ⚂", "⚃ Администратор 4 ур. ⚃"].includes(r.name))){
+            if (!message.member.hasPermission("ADMINISTRATOR")){
+                moderation_channel.send(`\`[ERROR]\` \`${message.member.displayName} попытался заблокировать модератора!\nCMD:\` ${message.content}`);
+                return message.delete();
+            }
+        }
+        let info_user = "Пользователь";
+        if (user.roles.some(r => ["Министры", "Лидеры фракций"].includes(r.name))){
+            info_user = "Министр";
+        }else if (user.roles.some(r => ["Лидеры фракций"].includes(r.name))){
+            info_user = "Лидер фракции";
+        }else if (user.roles.some(r => ["Заместители фракций"].includes(r.name))){
+            info_user = "Заместитель фракции";
         }
         const args = message.content.slice(`/mban`).split(/ +/);
         let reason = args.slice(2).join(" ");
         if (!reason){
-            message.reply(`\`вы не указали причину! '/mban [user] [причина]\``).then(msg => msg.delete(12000));
+            message.reply(`\`вы не указали причину! '/mban [user] [причина]'\``).then(msg => msg.delete(12000));
             return message.delete(); 
         }
-        let moderation_channel = message.guild.channels.find(c => c.name == "модераторы");
-        if (!moderation_channel) return message.delete();
         const embed = new Discord.RichEmbed()
         .setTitle("`Discord » Блокировка участника.`")
         .setColor("#483D8B")
-        .addField("Информация", `\`Отправитель:\` <@${message.author.id}>\n\`Нарушитель:\` <@${user.id}>`)
+        .addField("Информация", `\`Отправитель:\` <@${message.author.id}>\n\`Нарушитель:\` <@${user.id}>\n\`Статус нарушителя:\` **${info_user}**`)
         .addField("Причина выдачи", `${reason}`)
         .setFooter("© Support Team")
         .setTimestamp()
@@ -442,13 +456,13 @@ bot.on('raw', async event => {
             if (message.embeds[0].title == "`Discord » Блокировка участника.`"){
                 let field_user = server.members.find(m => `<@${m.id}>` == message.embeds[0].fields[0].value.split('\n')[1].split(/ +/)[1]);
                 if (event_userid == "283606560436125696"){
-                    channel.send(`\`Модератор ${member.displayName} одобрил запрос на блокировку пользователя:\` <@${field_user.id}>`);
+                    channel.send(`\`Администратор ${member.displayName} одобрил запрос на блокировку пользователя:\` <@${field_user.id}>`);
                     return message.delete();
                 }
                 let accepted_ban = await message.reactions.get(`🅱`).users.size - 3
                 let deny_ban = await message.reactions.get(`❎`).users.size - 1
                 if (accepted_ban > deny_ban){
-                    channel.send(`\`Пользователь\` <@${field_user.id}> \`был заблокирован по голосованию!\``);
+                    channel.send(`\`Пользователь\` <@${field_user.id}> \`был заблокирован по голосованию модераторов!\nЗа блокировку: ${accepted_ban}, против: ${deny_ban}\``);
                     return message.delete();
                 }
             }
@@ -456,13 +470,13 @@ bot.on('raw', async event => {
             if (message.embeds[0].title == "`Discord » Блокировка участника.`"){ 
                 let field_user = server.members.find(m => `<@${m.id}>` == message.embeds[0].fields[0].value.split('\n')[1].split(/ +/)[1]);
                 if (event_userid == "283606560436125696"){
-                    channel.send(`\`Модератор ${member.displayName} отказал запрос на блокировку пользователя:\` <@${field_user.id}>`);
+                    channel.send(`\`Администратор ${member.displayName} отказал запрос на блокировку пользователя:\` <@${field_user.id}>`);
                     return message.delete();
                 }
                 let accepted_ban = await message.reactions.get(`🅱`).users.size - 1
                 let deny_ban = await message.reactions.get(`❎`).users.size - 3
                 if (deny_ban > accepted_ban){
-                    channel.send(`\`Пользователь\` <@${field_user.id}> \`был отказан от блокировки по голосованию!\``);
+                    channel.send(`\`Пользователь\` <@${field_user.id}> \`был отказан от блокировки по голосованию модераторов!\nЗа блокировку: ${accepted_ban}, против: ${deny_ban}\``);
                     return message.delete();
                 }
             }
