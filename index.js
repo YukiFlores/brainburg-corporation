@@ -446,7 +446,7 @@ bot.on('raw', async event => {
                     channel.send(`\`Модератор ${member.displayName} одобрил запрос на блокировку пользователя:\` <@${field_user.id}>`);
                     return message.delete();
                 }
-                if (+msg.reactions.get(`🅱`).users.size - 4 > +msg.reactions.get(`❎`).users.size - 1){
+                if (+msg.reactions.get(`🅱`).users.size - 4 > +message.reactions.get(`❎`).users.size - 1){
                     channel.send(`\`Пользователь\` <@${field_user.id}> \`был заблокирован по голосованию!\``);
                     return message.delete();
                 }
@@ -459,7 +459,7 @@ bot.on('raw', async event => {
                     channel.send(`\`Модератор ${member.displayName} отказал запрос на блокировку пользователя:\` <@${field_user.id}>`);
                     return message.delete();
                 }
-                if (+msg.reactions.get(`❎`).users.size - 4 > +msg.reactions.get(`🅱`).users.size - 1){
+                if (+msg.reactions.get(`❎`).users.size - 4 > +message.reactions.get(`🅱`).users.size - 1){
                     channel.send(`\`Пользователь\` <@${field_user.id}> \`был отказан от блокировки по голосованию!\``);
                     return message.delete();
                 }
