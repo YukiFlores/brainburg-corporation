@@ -339,7 +339,7 @@ bot.on('message', async message => {
                         let for_check = tagstoperms[role.name].split(', ');
 let mention = null;
 for (var i = 0; i < for_check.length; i++){
-    if (for_check[i].startsWith("Лидер") || for_check[i].startsWith("Зам.") || for_check[i].startsWith("Мэр") || for_check[i].startWith("Премьер-Министр") || for_check[i].startsWith("Глава") || for_check[i].startsWith("Начальник")){
+    if (for_check[i].startsWith("Лидер") || for_check[i].startsWith("Зам.") || for_check[i].startsWith("Мэр") || for_check[i].startsWith("Премьер-Министр") || for_check[i].startsWith("Глава") || for_check[i].startsWith("Начальник")){
 
 if (mention == null){
 mention = `<@${message.guild.roles.find(r => r.name == for_check[i]).id}>`
