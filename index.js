@@ -464,13 +464,13 @@ bot.on('raw', async event => {
                 let deny_ban = await message.reactions.get(`❎`).users.size - 1
                 if (accepted_ban > deny_ban){
                     await message.reactions.get(`🅱`).users.forEach(async user => {
-                        await fs.appendFileSync(`./${message.id}.txt`, `[YES] ${user.displayName}, ID: ${user.id}\n`);
+                        await fs.appendFileSync(`./${message.id}.txt`, `[YES] ${user.nickname}, ID: ${user.id}\n`);
                     })
 
                     await message.reactions.get(`❎`).users.forEach(async user => {
-                        await fs.appendFileSync(`./${message.id}.txt`, `[NO] ${user.displayName}, ID: ${user.id}\n`);
+                        await fs.appendFileSync(`./${message.id}.txt`, `[NO] ${user.nickname}, ID: ${user.id}\n`);
                     })
-                    await channel.send(`\`Пользователь\` <@${field_user.id}> \`был заблокирован по голосованию модераторов по причине: ${reason_ban}\nОтправлял: ${who_send.displayName}, за блокировку: ${accepted_ban + 2}, против: ${deny_ban}\``, { files: [ `./${message.id}.txt` ] });
+                    await channel.send(`\`Пользователь\` <@${field_user.id}> \`был заблокирован по голосованию модераторов по причине: ${reason_ban}\nОтправлял: ${who_send.displayName}, за блокировку: ${+accepted_ban + 3}, против: ${+deny_ban + 1}\``, { files: [ `./${message.id}.txt` ] });
                     await message.delete();
                     fs.unlinkSync(`./${message.id}.txt`);
                     return field_user.ban(reason_ban + ` by ${who_send}`)
@@ -489,13 +489,13 @@ bot.on('raw', async event => {
                 let deny_ban = await message.reactions.get(`❎`).users.size - 3
                 if (deny_ban > accepted_ban){
                     await message.reactions.get(`🅱`).users.forEach(async user => {
-                        await fs.appendFileSync(`./${message.id}.txt`, `[YES] ${user.displayName}, ID: ${user.id}\n`);
+                        await fs.appendFileSync(`./${message.id}.txt`, `[YES] ${user.nickname}, ID: ${user.id}\n`);
                     })
 
                     await message.reactions.get(`❎`).users.forEach(async user => {
-                        await fs.appendFileSync(`./${message.id}.txt`, `[NO] ${user.displayName}, ID: ${user.id}\n`);
+                        await fs.appendFileSync(`./${message.id}.txt`, `[NO] ${user.nickname}, ID: ${user.id}\n`);
                     })
-                    await channel.send(`\`Пользователь\` <@${field_user.id}> \`был отказан от блокировки по голосованию модераторов. Причина бана: ${reason_ban}!\nОтправлял: ${who_send.displayName}, за блокировку: ${accepted_ban + 2}, против: ${deny_ban}\``, { files: [ `./${message.id}.txt` ] });
+                    await channel.send(`\`Пользователь\` <@${field_user.id}> \`был отказан от блокировки по голосованию модераторов. Причина бана: ${reason_ban}!\nОтправлял: ${who_send.displayName}, за блокировку: ${+accepted_ban + 1}, против: ${+deny_ban + 3}\``, { files: [ `./${message.id}.txt` ] });
                     await message.delete();
                     fs.unlinkSync(`./${message.id}.txt`);
                     return
