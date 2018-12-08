@@ -442,11 +442,11 @@ bot.on('raw', async event => {
             if (message.embeds[0].title == "`Discord » Блокировка участника.`"){
                 if (message.reactions.size != 2) return 
                 let field_user = server.members.find(m => `<@${m.id}>` == message.embeds[0].fields[0].value.split('\n')[1].split(/ +/)[1]);
-                if (member.id == "283606560436125696"){
+                if (event_userid == "283606560436125696"){
                     channel.send(`\`Модератор ${member.displayName} одобрил запрос на блокировку пользователя:\` <@${field_user.id}>`);
                     return message.delete();
                 }
-                if (+msg.reactions.get(`🅱`).users.size - 4 > +message.reactions.get(`❎`).users.size - 1){
+                if (+message.reactions.get(`🅱`).users.size - 4 > +message.reactions.get(`❎`).users.size - 1){
                     channel.send(`\`Пользователь\` <@${field_user.id}> \`был заблокирован по голосованию!\``);
                     return message.delete();
                 }
@@ -455,11 +455,11 @@ bot.on('raw', async event => {
             if (message.embeds[0].title == "`Discord » Блокировка участника.`"){
                 if (message.reactions.size != 2) return 
                 let field_user = server.members.find(m => `<@${m.id}>` == message.embeds[0].fields[0].value.split('\n')[1].split(/ +/)[1]);
-                if (member.id == "283606560436125696"){
+                if (event_userid == "283606560436125696"){
                     channel.send(`\`Модератор ${member.displayName} отказал запрос на блокировку пользователя:\` <@${field_user.id}>`);
                     return message.delete();
                 }
-                if (+msg.reactions.get(`❎`).users.size - 4 > +message.reactions.get(`🅱`).users.size - 1){
+                if (+message.reactions.get(`❎`).users.size - 4 > +message.reactions.get(`🅱`).users.size - 1){
                     channel.send(`\`Пользователь\` <@${field_user.id}> \`был отказан от блокировки по голосованию!\``);
                     return message.delete();
                 }
