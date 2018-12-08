@@ -155,7 +155,7 @@ bot.on('message', async message => {
             return message.delete();
         }
         let info_user = "Пользователь";
-        if (user.roles.some(r => ["Министры", "Лидеры фракций"].includes(r.name))){
+        if (user.roles.some(r => ["Министры"].includes(r.name))){
             info_user = "Министр";
         }else if (user.roles.some(r => ["Лидеры фракций"].includes(r.name))){
             info_user = "Лидер фракции";
