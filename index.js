@@ -336,6 +336,19 @@ bot.on('message', async message => {
                     return message.react(`👌`) // Если роль есть, поставить окей.
                 }
                 if (sened.has(message.member.displayName)) return message.react(`🕖`) // Если уже отправлял - поставить часы.
+                        let for_check = tagstoperms[role.name].split(', ');
+let mention = null;
+for (var i = 0; i < for_check.length; i++){
+    if (for_check[i].startsWith("Лидер") || for_check[i].startsWith("Зам.") || for_check[i].startsWith("Мэр") || for_check[i].startWith("Премьер-Министр") || for_check[i].startsWith("Глава") || for_check[i].startsWith("Начальник")){
+
+if (mention == null){
+mention = `<@${message.guild.roles.find(r => r.name == for_check[i]).id}>`
+}else{
+mention = mention + `, <@${message.guild.roles.find(r => r.name == for_check[i]).id}>`
+}
+
+}
+}
                 let nickname = message.member.displayName;
                 const embed = new Discord.RichEmbed()
                 .setTitle("`Discord » Проверка на валидность ник нейма.`")
@@ -347,7 +360,7 @@ bot.on('message', async message => {
                 .addField("Информация по выдачи", `\`[✔] - выдать роль\`\n` + `\`[❌] - отказать в выдачи роли\`\n` + `\`[D] - удалить сообщение\``)
                 .setFooter("© Support Team | by Kory_McGregor")
                 .setTimestamp()
-                reqchat.send(embed).then(async msgsen => {
+                reqchat.send(`${mention}`, embed).then(async msgsen => {
                     await msgsen.react('✔')
                     await msgsen.react('❌')
                     await msgsen.react('🇩')
