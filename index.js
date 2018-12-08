@@ -453,28 +453,50 @@ bot.on('raw', async event => {
         }else if (event_emoji_name == "🅱"){
             if (message.embeds[0].title == "`Discord » Блокировка участника.`"){
                 let field_user = server.members.find(m => `<@${m.id}>` == message.embeds[0].fields[0].value.split('\n')[1].split(/ +/)[1]);
+                let reason_ban = await message.embeds[0].fields[1].value;
+                let who_send = await server.members.find(m => `<@${m.id}>` == message.embeds[0].fields[0].value.split('\n')[0].split(/ +/)[1]);
                 if (event_userid == "283606560436125696"){
-                    channel.send(`\`Администратор ${member.displayName} одобрил запрос на блокировку пользователя:\` <@${field_user.id}>`);
-                    return message.delete();
+                    channel.send(`\`Администратор ${member.displayName} одобрил запрос на блокировку пользователя:\` <@${field_user.id}>\n\`Причина: ${reason_ban}, отправлял: ${who_send.displayName}\``);
+                    message.delete();
+                    return field_user.ban(reason_ban + " by " + who_send.displayName);
                 }
                 let accepted_ban = await message.reactions.get(`🅱`).users.size - 3
                 let deny_ban = await message.reactions.get(`❎`).users.size - 1
+                await message.reactions.get(`🅱`).users.forEach(async user => {
+                    await fs.appendFileSync(`./${message.id}.txt`, `[YES] ${user.displayName}, ID: ${user.id}\n`);
+                })
+                
+                await message.reactions.get(`❎`).users.forEach(async user => {
+                    await fs.appendFileSync(`./${message.id}.txt`, `[NO] ${user.displayName}, ID: ${user.id}\n`);
+                })
                 if (accepted_ban > deny_ban){
-                    channel.send(`\`Пользователь\` <@${field_user.id}> \`был заблокирован по голосованию модераторов!\nЗа блокировку: ${accepted_ban + 2}, против: ${deny_ban}\``);
-                    return message.delete();
+                    await channel.send(`\`Пользователь\` <@${field_user.id}> \`был заблокирован по голосованию модераторов по причине: ${reason_ban}\nОтправлял: ${who_send.displayName}, за блокировку: ${accepted_ban + 2}, против: ${deny_ban}\``, { files: [ `./${message.id}.txt` ] });
+                    fs.unlinkSync(`./${message.id}.txt`);
+                    message.delete();
+                    return field_user.ban(reason_ban + ` by ${who_send}`)
                 }
             }
         }else if (event_emoji_name == "❎"){
             if (message.embeds[0].title == "`Discord » Блокировка участника.`"){ 
                 let field_user = server.members.find(m => `<@${m.id}>` == message.embeds[0].fields[0].value.split('\n')[1].split(/ +/)[1]);
+                let reason_ban = await message.embeds[0].fields[1].value;
+                let who_send = await server.members.find(m => `<@${m.id}>` == message.embeds[0].fields[0].value.split('\n')[0].split(/ +/)[1]);
                 if (event_userid == "283606560436125696"){
-                    channel.send(`\`Администратор ${member.displayName} отказал запрос на блокировку пользователя:\` <@${field_user.id}>`);
+                    channel.send(`\`Администратор ${member.displayName} отказал запрос на блокировку пользователя:\` <@${field_user.id}>\n\`Причина бана: ${reason_ban}, отправлял: ${who_send.displayName}\``);
                     return message.delete();
                 }
                 let accepted_ban = await message.reactions.get(`🅱`).users.size - 1
                 let deny_ban = await message.reactions.get(`❎`).users.size - 3
+                await message.reactions.get(`🅱`).users.forEach(async user => {
+                    await fs.appendFileSync(`./${message.id}.txt`, `[YES] ${user.displayName}, ID: ${user.id}\n`);
+                })
+                
+                await message.reactions.get(`❎`).users.forEach(async user => {
+                    await fs.appendFileSync(`./${message.id}.txt`, `[NO] ${user.displayName}, ID: ${user.id}\n`);
+                })
                 if (deny_ban > accepted_ban){
-                    channel.send(`\`Пользователь\` <@${field_user.id}> \`был отказан от блокировки по голосованию модераторов!\nЗа блокировку: ${accepted_ban + 2}, против: ${deny_ban}\``);
+                    await channel.send(`\`Пользователь\` <@${field_user.id}> \`был отказан от блокировки по голосованию модераторов. Причина бана: ${reason_ban}!\nОтправлял: ${who_send.displayName}, за блокировку: ${accepted_ban + 2}, против: ${deny_ban}\``, { files: [ `./${message.id}.txt` ] });
+                    fs.unlinkSync(`./${message.id}.txt`);
                     return message.delete();
                 }
             }
