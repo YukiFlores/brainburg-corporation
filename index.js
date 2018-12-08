@@ -150,11 +150,9 @@ bot.on('message', async message => {
             message.reply(`\`вы не указали пользователя! '/mban [user] [причина]'\``).then(msg => msg.delete(12000));
             return message.delete();
         }
-        if (user.hasPermission("ADMINISTRATOR") || user.roles.some(r => ["Модератор Discord", "⚀ Администратор 1 ур. ⚀", "⚁ Администратор 2 ур. ⚁", "⚂ Администратор 3 ур. ⚂", "⚃ Администратор 4 ур. ⚃"].includes(r.name))){
-            if (!message.member.hasPermission("ADMINISTRATOR")){
-                moderation_channel.send(`\`[ERROR]\` \`${message.member.displayName} попытался заблокировать модератора!\nCMD:\` ${message.content}`);
-                return message.delete();
-            }
+        if (user.hasPermission("ADMINISTRATOR") || user.roles.some(r => ["❖ Боты ❖", "Модератор Discord", "⚀ Администратор 1 ур. ⚀", "⚁ Администратор 2 ур. ⚁", "⚂ Администратор 3 ур. ⚂", "⚃ Администратор 4 ур. ⚃"].includes(r.name))){
+            message.reply(`\`[ERROR]\` \`К твоему сожалению модератора заблокировать нельзя :/\``);
+            return message.delete();
         }
         let info_user = "Пользователь";
         if (user.roles.some(r => ["Министры", "Лидеры фракций"].includes(r.name))){
@@ -462,7 +460,7 @@ bot.on('raw', async event => {
                 let accepted_ban = await message.reactions.get(`🅱`).users.size - 3
                 let deny_ban = await message.reactions.get(`❎`).users.size - 1
                 if (accepted_ban > deny_ban){
-                    channel.send(`\`Пользователь\` <@${field_user.id}> \`был заблокирован по голосованию модераторов!\nЗа блокировку: ${accepted_ban}, против: ${deny_ban}\``);
+                    channel.send(`\`Пользователь\` <@${field_user.id}> \`был заблокирован по голосованию модераторов!\nЗа блокировку: ${accepted_ban + 2}, против: ${deny_ban}\``);
                     return message.delete();
                 }
             }
@@ -476,7 +474,7 @@ bot.on('raw', async event => {
                 let accepted_ban = await message.reactions.get(`🅱`).users.size - 1
                 let deny_ban = await message.reactions.get(`❎`).users.size - 3
                 if (deny_ban > accepted_ban){
-                    channel.send(`\`Пользователь\` <@${field_user.id}> \`был отказан от блокировки по голосованию модераторов!\nЗа блокировку: ${accepted_ban}, против: ${deny_ban}\``);
+                    channel.send(`\`Пользователь\` <@${field_user.id}> \`был отказан от блокировки по голосованию модераторов!\nЗа блокировку: ${accepted_ban + 2}, против: ${deny_ban}\``);
                     return message.delete();
                 }
             }
