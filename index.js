@@ -5,6 +5,7 @@ const fs = require("fs");
 const nrpnames = new Set(); // Невалидные ники будут записаны в nrpnames
 const sened = new Set(); // Уже отправленные запросы будут записаны в sened
 const snyatie = new Set(); // КД
+const antikick = new Set();
 
 tagstoperms = ({
     "Сотрудник правительства": "ГС Гос, ЗГС Гос, ГС правительства, ЗГС правительства, Следящий правительства, Лидер правительства, Премьер-Министр, Мэр ЛС, Мэр СФ, Мэр ЛВ",
@@ -143,6 +144,7 @@ bot.on('message', async message => {
     
     if (message.content.startsWith("/mkick")){
         if (!message.member.roles.some(r => r.name == "Модератор Discord") && !message.member.hasPermission("ADMINISTRATOR")) return
+        if (antikick.has(message.author.id)) return message.delete();
         let moderation_channel = message.guild.channels.find(c => c.name == "модераторы");
         let dis_log = message.guild.channels.find(c => c.name == "dis-log");
         if (!moderation_channel || !dis_log) return message.delete();
@@ -162,6 +164,10 @@ bot.on('message', async message => {
             return message.delete(); 
         }
         user.kick(reason + " / " + message.member.displayName);
+        antikick.add(message.author.id);
+        setTimeout(() => {
+               if (antikick.has(message.author.id)) antikick.delete(message.author.id);
+        }, 30000);
         let testcase = new Date().valueOf();
         const embed = new Discord.RichEmbed()
         .setAuthor(`Случай ${testcase} | KICK | ${user.nickname}`)
@@ -169,6 +175,7 @@ bot.on('message', async message => {
         .addField(`Модератор`, `<@${message.author.id}>`, true)
         .addField(`Причина`, `${reason}`, true)
         dis_log.send(embed)
+        return message.delete()
     }
     
     if (message.content.startsWith("/mban")){
