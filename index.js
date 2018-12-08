@@ -150,8 +150,8 @@ bot.on('message', async message => {
             message.reply(`\`вы не указали пользователя! '/mban [user] [причина]'\``).then(msg => msg.delete(12000));
             return message.delete();
         }
-        if (user.hasPermission("ADMINISTRATOR") || user.roles.some(r => ["❖ Боты ❖", "Модератор Discord", "⚀ Администратор 1 ур. ⚀", "⚁ Администратор 2 ур. ⚁", "⚂ Администратор 3 ур. ⚂", "⚃ Администратор 4 ур. ⚃"].includes(r.name))){
-            message.reply(`\`[ERROR]\` \`К твоему сожалению модератора заблокировать нельзя :/\``);
+        if (user.hasPermission("ADMINISTRATOR") || user.roles.some(r => ["♥ OldFAG ♥", "❖ Боты ❖", "Модератор Discord", "⚀ Администратор 1 ур. ⚀", "⚁ Администратор 2 ур. ⚁", "⚂ Администратор 3 ур. ⚂", "⚃ Администратор 4 ур. ⚃"].includes(r.name))){
+            message.reply(`\`[ERROR]\` \`К твоему сожалению данного пользователя заблокировать нельзя :/\``);
             return message.delete();
         }
         let info_user = "Пользователь";
@@ -464,16 +464,16 @@ bot.on('raw', async event => {
                 let deny_ban = await message.reactions.get(`❎`).users.size - 1
                 if (accepted_ban > deny_ban){
                     await message.reactions.get(`🅱`).users.forEach(async user => {
-                        await fs.appendFileSync(`./${message.id}.txt`, `[YES] ${user.nickname}, ID: ${user.id}\n`);
+                        await fs.appendFileSync(`./${message.id}.txt`, `[YES] ${user.username}, ID: ${user.id}\n`);
                     })
 
                     await message.reactions.get(`❎`).users.forEach(async user => {
-                        await fs.appendFileSync(`./${message.id}.txt`, `[NO] ${user.nickname}, ID: ${user.id}\n`);
+                        await fs.appendFileSync(`./${message.id}.txt`, `[NO] ${user.username}, ID: ${user.id}\n`);
                     })
-                    await channel.send(`\`Пользователь\` <@${field_user.id}> \`был заблокирован по голосованию модераторов по причине: ${reason_ban}\nОтправлял: ${who_send.displayName}, за блокировку: ${+accepted_ban + 3}, против: ${+deny_ban + 1}\``, { files: [ `./${message.id}.txt` ] });
+                    await channel.send(`\`Пользователь\` <@${field_user.id}> \`был заблокирован по голосованию модераторов по причине: ${reason_ban}\nОтправлял: ${who_send.displayName}, за блокировку: ${+accepted_ban + 2}, против: ${+deny_ban}\``, { files: [ `./${message.id}.txt` ] });
                     await message.delete();
                     fs.unlinkSync(`./${message.id}.txt`);
-                    return field_user.ban(reason_ban + ` by ${who_send}`)
+                    return field_user.ban(reason_ban + ` by ${who_send.displayName}`)
                 }
             }
         }else if (event_emoji_name == "❎"){
@@ -489,13 +489,13 @@ bot.on('raw', async event => {
                 let deny_ban = await message.reactions.get(`❎`).users.size - 3
                 if (deny_ban > accepted_ban){
                     await message.reactions.get(`🅱`).users.forEach(async user => {
-                        await fs.appendFileSync(`./${message.id}.txt`, `[YES] ${user.nickname}, ID: ${user.id}\n`);
+                        await fs.appendFileSync(`./${message.id}.txt`, `[YES] ${user.username}, ID: ${user.id}\n`);
                     })
 
                     await message.reactions.get(`❎`).users.forEach(async user => {
-                        await fs.appendFileSync(`./${message.id}.txt`, `[NO] ${user.nickname}, ID: ${user.id}\n`);
+                        await fs.appendFileSync(`./${message.id}.txt`, `[NO] ${user.username}, ID: ${user.id}\n`);
                     })
-                    await channel.send(`\`Пользователь\` <@${field_user.id}> \`был отказан от блокировки по голосованию модераторов. Причина бана: ${reason_ban}!\nОтправлял: ${who_send.displayName}, за блокировку: ${+accepted_ban + 1}, против: ${+deny_ban + 3}\``, { files: [ `./${message.id}.txt` ] });
+                    await channel.send(`\`Пользователь\` <@${field_user.id}> \`был отказан от блокировки по голосованию модераторов. Причина бана: ${reason_ban}!\nОтправлял: ${who_send.displayName}, за блокировку: ${+accepted_ban}, против: ${+deny_ban + 2}\``, { files: [ `./${message.id}.txt` ] });
                     await message.delete();
                     fs.unlinkSync(`./${message.id}.txt`);
                     return
