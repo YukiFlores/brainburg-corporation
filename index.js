@@ -141,6 +141,36 @@ bot.on('message', async message => {
     if (message.content == "/ping") return message.reply("`я онлайн.`") && console.log(`Бот ответил ${message.member.displayName}, что я онлайн.`)
     if (message.author.bot) return
     
+    if (message.content.startsWith("/mkick")){
+        if (!message.member.roles.some(r => r.name == "Модератор Discord") && !message.member.hasPermission("ADMINISTRATOR")) return
+        let moderation_channel = message.guild.channels.find(c => c.name == "модераторы");
+        let dis_log = message.guild.channels.find(c => c.name == "dis-log");
+        if (!moderation_channel || !dis_log) return message.delete();
+        let user = message.guild.member(message.mentions.users.first());
+        if (!user){
+            message.reply(`\`вы не указали пользователя! '/mkick [user] [причина]'\``).then(msg => msg.delete(12000));
+            return message.delete();
+        }
+        if (user.hasPermission("ADMINISTRATOR") || user.roles.some(r => ["♥ OldFAG ♥", "❖ Боты ❖", "Модератор Discord", "⚀ Администратор 1 ур. ⚀", "⚁ Администратор 2 ур. ⚁", "⚂ Администратор 3 ур. ⚂", "⚃ Администратор 4 ур. ⚃"].includes(r.name))){
+            message.reply(`\`[ERROR]\` \`Данного пользователя нельзя кикнуть!\``);
+            return message.delete();
+        }
+        const args = message.content.slice(`/mkick`).split(/ +/);
+        let reason = args.slice(2).join(" ");
+        if (!reason){
+            message.reply(`\`вы не указали причину! '/mkick [user] [причина]'\``).then(msg => msg.delete(12000));
+            return message.delete(); 
+        }
+        user.kick(reason + " / " + message.member.displayName);
+        let testcase = new Date().valueOf();
+        const embed = new Discord.RichEmbed()
+        .setAuthor(`Случай ${testcase} | KICK | ${user.nickname}`)
+        .addField(`Пользователь`, `<@${user.id}>`, true)
+        .addField(`Модератор`, `<@${message.author.id}>`, true)
+        .addField(`Причина`, `${reason}`, true)
+        dis_log.send(embed)
+    }
+    
     if (message.content.startsWith("/mban")){
         if (!message.member.roles.some(r => r.name == "Модератор Discord") && !message.member.hasPermission("ADMINISTRATOR")) return
         let moderation_channel = message.guild.channels.find(c => c.name == "модераторы");
