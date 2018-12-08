@@ -353,7 +353,6 @@ bot.on('raw', async event => {
         let member = server.members.find(m => m.id == event_userid); // Получить пользователя с сервера
 
         if (channel.name != `requests-for-roles` && channel.name != `модераторы`) return // Если название канала не будет 'requests-for-roles', то выйти
-
         if (event_emoji_name == "🇩"){
             if (!message.embeds[0]){
                 channel.send(`\`[DELETED]\` ${member} \`удалил багнутый запрос.\``);
@@ -380,125 +379,133 @@ bot.on('raw', async event => {
                 return message.delete();
             }
         }else if(event_emoji_name == "❌"){
-            if (message.embeds[0].title == '`Discord » Проверка на валидность ник нейма.`'){
-                if (message.reactions.size != 3){
-                    return channel.send(`\`[ERROR]\` \`Не торопись! Сообщение еще загружается!\``)
+            if (message.embeds[0]){
+                if (message.embeds[0].title == '`Discord » Проверка на валидность ник нейма.`'){
+                    if (message.reactions.size != 3){
+                        return channel.send(`\`[ERROR]\` \`Не торопись! Сообщение еще загружается!\``)
+                    }
+                    let field_user = server.members.find(m => "<@" + m.id + ">" == message.embeds[0].fields[0].value.split(/ +/)[1]);
+                    let field_nickname = message.embeds[0].fields[1].value.split(`\`Ник:\` `)[1];
+                    let field_role = server.roles.find(r => "<@&" + r.id + ">" == message.embeds[0].fields[2].value.split(/ +/)[3]);
+                    let field_channel = server.channels.find(c => "<#" + c.id + ">" == message.embeds[0].fields[3].value.split(/ +/)[0]);
+                    let permission_role = tagstoperms[field_role.name].split(', ')
+                    let dostup_perm = false;
+                    for (var i = 0; i < permission_role.length; i++){
+                        if (member.roles.some(r => r.name == permission_role[i]) || member.hasPermission("ADMINISTRATOR") || member.id == "12345") dostup_perm = true;
+                    }
+                    if (!dostup_perm){
+                        return channel.send(`\`[ERROR]\` <@${member.id}> \`у вас нет прав доступа к данной категории.\``).then(msg => msg.delete(17000));
+                    }
+                    channel.send(`\`[DENY]\` <@${member.id}> \`отклонил запрос от ${field_nickname}, с ID: ${field_user.id}\``);
+                    field_channel.send(`<@${field_user.id}>**,** \`модератор\` <@${member.id}> \`отклонил ваш запрос на выдачу роли.\nВозможно ваш никнейм составлен не по форме!\nУстановите ник на: [Фракция] [ранг] Имя_Фамилия\``)
+                    nrpnames.add(field_nickname); // Добавить данный никнейм в список невалидных
+                    if (sened.has(field_nickname)) sened.delete(field_nickname); // Отметить ник, что он не отправлял запрос
+                    return message.delete();
                 }
-                let field_user = server.members.find(m => "<@" + m.id + ">" == message.embeds[0].fields[0].value.split(/ +/)[1]);
-                let field_nickname = message.embeds[0].fields[1].value.split(`\`Ник:\` `)[1];
-                let field_role = server.roles.find(r => "<@&" + r.id + ">" == message.embeds[0].fields[2].value.split(/ +/)[3]);
-                let field_channel = server.channels.find(c => "<#" + c.id + ">" == message.embeds[0].fields[3].value.split(/ +/)[0]);
-                let permission_role = tagstoperms[field_role.name].split(', ')
-                let dostup_perm = false;
-                for (var i = 0; i < permission_role.length; i++){
-                    if (member.roles.some(r => r.name == permission_role[i]) || member.hasPermission("ADMINISTRATOR") || member.id == "12345") dostup_perm = true;
-                }
-                if (!dostup_perm){
-                    return channel.send(`\`[ERROR]\` <@${member.id}> \`у вас нет прав доступа к данной категории.\``).then(msg => msg.delete(17000));
-                }
-                channel.send(`\`[DENY]\` <@${member.id}> \`отклонил запрос от ${field_nickname}, с ID: ${field_user.id}\``);
-                field_channel.send(`<@${field_user.id}>**,** \`модератор\` <@${member.id}> \`отклонил ваш запрос на выдачу роли.\nВозможно ваш никнейм составлен не по форме!\nУстановите ник на: [Фракция] [ранг] Имя_Фамилия\``)
-                nrpnames.add(field_nickname); // Добавить данный никнейм в список невалидных
-                if (sened.has(field_nickname)) sened.delete(field_nickname); // Отметить ник, что он не отправлял запрос
-                return message.delete();
             }
         }else if (event_emoji_name == "✔"){
-            if (message.embeds[0].title == '`Discord » Проверка на валидность ник нейма.`'){
-                if (message.reactions.size != 3){
-                    return channel.send(`\`[ERROR]\` \`Не торопись! Сообщение еще загружается!\``)
-                }
-                let field_user = server.members.find(m => "<@" + m.id + ">" == message.embeds[0].fields[0].value.split(/ +/)[1]);
-                let field_nickname = message.embeds[0].fields[1].value.split(`\`Ник:\` `)[1];
-                let field_role = server.roles.find(r => "<@&" + r.id + ">" == message.embeds[0].fields[2].value.split(/ +/)[3]);
-                let field_channel = server.channels.find(c => "<#" + c.id + ">" == message.embeds[0].fields[3].value.split(/ +/)[0]);
-                if (field_user.roles.some(r => field_role.id == r.id)){
-                    if (sened.has(field_nickname)) sened.delete(field_nickname); // Отметить ник, что он не отправлял запрос
-                    return message.delete(); // Если роль есть, то выход
-                }
-                let permission_role = tagstoperms[field_role.name].split(', ')
-                let dostup_perm = false;
-                for (var i = 0; i < permission_role.length; i++){
-                    if (member.roles.some(r => r.name == permission_role[i]) || member.hasPermission("ADMINISTRATOR") || member.id == "12345") dostup_perm = true;
-                }
-                if (!dostup_perm){
-                    return channel.send(`\`[ERROR]\` <@${member.id}> \`у вас нет прав доступа к данной категории.\``).then(msg => msg.delete(17000));
-                }
-                let rolesremoved = false;
-                let rolesremovedcount = 0;
-                if (field_user.roles.some(r=>rolesgg.includes(r.name))) {
-                    for (var i in rolesgg){
-                        let rolerem = server.roles.find(r => r.name == rolesgg[i]);
-                        if (field_user.roles.some(role=>[rolesgg[i]].includes(role.name))){
-                            rolesremoved = true;
-                            rolesremovedcount = rolesremovedcount+1;
-                            await field_user.removeRole(rolerem); // Забрать фракционные роли
+            if (message.embeds[0]){
+                if (message.embeds[0].title == '`Discord » Проверка на валидность ник нейма.`'){
+                    if (message.reactions.size != 3){
+                        return channel.send(`\`[ERROR]\` \`Не торопись! Сообщение еще загружается!\``)
+                    }
+                    let field_user = server.members.find(m => "<@" + m.id + ">" == message.embeds[0].fields[0].value.split(/ +/)[1]);
+                    let field_nickname = message.embeds[0].fields[1].value.split(`\`Ник:\` `)[1];
+                    let field_role = server.roles.find(r => "<@&" + r.id + ">" == message.embeds[0].fields[2].value.split(/ +/)[3]);
+                    let field_channel = server.channels.find(c => "<#" + c.id + ">" == message.embeds[0].fields[3].value.split(/ +/)[0]);
+                    if (field_user.roles.some(r => field_role.id == r.id)){
+                        if (sened.has(field_nickname)) sened.delete(field_nickname); // Отметить ник, что он не отправлял запрос
+                        return message.delete(); // Если роль есть, то выход
+                    }
+                    let permission_role = tagstoperms[field_role.name].split(', ')
+                    let dostup_perm = false;
+                    for (var i = 0; i < permission_role.length; i++){
+                        if (member.roles.some(r => r.name == permission_role[i]) || member.hasPermission("ADMINISTRATOR") || member.id == "12345") dostup_perm = true;
+                    }
+                    if (!dostup_perm){
+                        return channel.send(`\`[ERROR]\` <@${member.id}> \`у вас нет прав доступа к данной категории.\``).then(msg => msg.delete(17000));
+                    }
+                    let rolesremoved = false;
+                    let rolesremovedcount = 0;
+                    if (field_user.roles.some(r=>rolesgg.includes(r.name))) {
+                        for (var i in rolesgg){
+                            let rolerem = server.roles.find(r => r.name == rolesgg[i]);
+                            if (field_user.roles.some(role=>[rolesgg[i]].includes(role.name))){
+                                rolesremoved = true;
+                                rolesremovedcount = rolesremovedcount+1;
+                                await field_user.removeRole(rolerem); // Забрать фракционные роли
+                            }
                         }
                     }
+                    if (gos_roles.includes(field_role.name)){
+                        if (field_user.roles.some(r => r.name == "Нелегал")) await field_user.removeRole(server.roles.find(r => r.name == "Нелегал"));
+                        if (!field_user.roles.some(r => r.name == "Сотрудник гос. организации")) await field_user.addRole(server.roles.find(r => r.name == "Сотрудник гос. организации"));
+                    }
+                   if (mafia_roles.includes(field_role.name)){
+                        if (field_user.roles.some(r => r.name == "Сотрудник гос. организации")) await field_user.removeRole(server.roles.find(r => r.name == "Сотрудник гос. организации"));
+                        if (!field_user.roles.some(r => r.name == "Нелегал")) await field_user.addRole(server.roles.find(r => r.name == "Нелегал"));
+                    }
+                    await field_user.addRole(field_role); // Выдать роль по соответствию с тэгом
+                    channel.send(`\`[ACCEPT]\` <@${member.id}> \`одобрил запрос от ${field_nickname}, с ID: ${field_user.id}\``);
+                    let ot_channel = server.channels.find(c => c.name == "лог-ролей");
+                    ot_channel.send(`__**Пользователь:**__ <@${member.id}>\n\`\`\`diff\n+ выдал роль [${field_role.name}]\`\`\`__**Пользователю:**__ <@${field_user.id}>\n**————————————**`)
+                    if (sened.has(field_nickname)) sened.delete(field_nickname); // Отметить ник, что он не отправлял запрос
+                    return message.delete();
                 }
-                if (gos_roles.includes(field_role.name)){
-                    if (field_user.roles.some(r => r.name == "Нелегал")) await field_user.removeRole(server.roles.find(r => r.name == "Нелегал"));
-                    if (!field_user.roles.some(r => r.name == "Сотрудник гос. организации")) await field_user.addRole(server.roles.find(r => r.name == "Сотрудник гос. организации"));
-                }
-               if (mafia_roles.includes(field_role.name)){
-                    if (field_user.roles.some(r => r.name == "Сотрудник гос. организации")) await field_user.removeRole(server.roles.find(r => r.name == "Сотрудник гос. организации"));
-                    if (!field_user.roles.some(r => r.name == "Нелегал")) await field_user.addRole(server.roles.find(r => r.name == "Нелегал"));
-                }
-                await field_user.addRole(field_role); // Выдать роль по соответствию с тэгом
-                channel.send(`\`[ACCEPT]\` <@${member.id}> \`одобрил запрос от ${field_nickname}, с ID: ${field_user.id}\``);
-                let ot_channel = server.channels.find(c => c.name == "лог-ролей");
-                ot_channel.send(`__**Пользователь:**__ <@${member.id}>\n\`\`\`diff\n+ выдал роль [${field_role.name}]\`\`\`__**Пользователю:**__ <@${field_user.id}>\n**————————————**`)
-                if (sened.has(field_nickname)) sened.delete(field_nickname); // Отметить ник, что он не отправлял запрос
-                return message.delete();
             }
         }else if (event_emoji_name == "🅱"){
-            if (message.embeds[0].title == "`Discord » Блокировка участника.`"){
-                let field_user = server.members.find(m => `<@${m.id}>` == message.embeds[0].fields[0].value.split('\n')[1].split(/ +/)[1]);
-                let reason_ban = await message.embeds[0].fields[1].value;
-                let who_send = await server.members.find(m => `<@${m.id}>` == message.embeds[0].fields[0].value.split('\n')[0].split(/ +/)[1]);
-                if (event_userid == "283606560436125696"){
-                    channel.send(`\`Администратор ${member.displayName} одобрил запрос на блокировку пользователя:\` <@${field_user.id}>\n\`Причина: ${reason_ban}, отправлял: ${who_send.displayName}\``);
-                    message.delete();
-                    return field_user.ban(reason_ban + " by " + who_send.displayName);
-                }
-                let accepted_ban = await message.reactions.get(`🅱`).users.size - 3
-                let deny_ban = await message.reactions.get(`❎`).users.size - 1
-                if (accepted_ban > deny_ban){
-                    await message.reactions.get(`🅱`).users.forEach(async user => {
-                        await fs.appendFileSync(`./${message.id}.txt`, `[YES] ${user.username}, ID: ${user.id}\n`);
-                    })
+            if (message.embeds[0]){
+                if (message.embeds[0].title == "`Discord » Блокировка участника.`"){
+                    let field_user = server.members.find(m => `<@${m.id}>` == message.embeds[0].fields[0].value.split('\n')[1].split(/ +/)[1]);
+                    let reason_ban = await message.embeds[0].fields[1].value;
+                    let who_send = await server.members.find(m => `<@${m.id}>` == message.embeds[0].fields[0].value.split('\n')[0].split(/ +/)[1]);
+                    if (event_userid == "283606560436125696"){
+                        channel.send(`\`Администратор ${member.displayName} одобрил запрос на блокировку пользователя:\` <@${field_user.id}>\n\`Причина: ${reason_ban}, отправлял: ${who_send.displayName}\``);
+                        message.delete();
+                        return field_user.ban(reason_ban + " by " + who_send.displayName);
+                    }
+                    let accepted_ban = await message.reactions.get(`🅱`).users.size - 3
+                    let deny_ban = await message.reactions.get(`❎`).users.size - 1
+                    if (accepted_ban > deny_ban){
+                        await message.reactions.get(`🅱`).users.forEach(async user => {
+                            await fs.appendFileSync(`./${message.id}.txt`, `[YES] ${user.username}, ID: ${user.id}\n`);
+                        })
 
-                    await message.reactions.get(`❎`).users.forEach(async user => {
-                        await fs.appendFileSync(`./${message.id}.txt`, `[NO] ${user.username}, ID: ${user.id}\n`);
-                    })
-                    await channel.send(`\`Пользователь\` <@${field_user.id}> \`был заблокирован по голосованию модераторов по причине: ${reason_ban}\nОтправлял: ${who_send.displayName}, за блокировку: ${+accepted_ban + 2}, против: ${+deny_ban}\``, { files: [ `./${message.id}.txt` ] });
-                    await message.delete();
-                    fs.unlinkSync(`./${message.id}.txt`);
-                    return field_user.ban(reason_ban + ` by ${who_send.displayName}`)
+                        await message.reactions.get(`❎`).users.forEach(async user => {
+                            await fs.appendFileSync(`./${message.id}.txt`, `[NO] ${user.username}, ID: ${user.id}\n`);
+                        })
+                        await channel.send(`\`Пользователь\` <@${field_user.id}> \`был заблокирован по голосованию модераторов по причине: ${reason_ban}\nОтправлял: ${who_send.displayName}, за блокировку: ${+accepted_ban + 2}, против: ${+deny_ban}\``, { files: [ `./${message.id}.txt` ] });
+                        await message.delete();
+                        fs.unlinkSync(`./${message.id}.txt`);
+                        return field_user.ban(reason_ban + ` by ${who_send.displayName}`)
+                    }
                 }
             }
         }else if (event_emoji_name == "❎"){
-            if (message.embeds[0].title == "`Discord » Блокировка участника.`"){ 
-                let field_user = server.members.find(m => `<@${m.id}>` == message.embeds[0].fields[0].value.split('\n')[1].split(/ +/)[1]);
-                let reason_ban = await message.embeds[0].fields[1].value;
-                let who_send = await server.members.find(m => `<@${m.id}>` == message.embeds[0].fields[0].value.split('\n')[0].split(/ +/)[1]);
-                if (event_userid == "283606560436125696"){
-                    channel.send(`\`Администратор ${member.displayName} отказал запрос на блокировку пользователя:\` <@${field_user.id}>\n\`Причина бана: ${reason_ban}, отправлял: ${who_send.displayName}\``);
-                    return message.delete();
-                }
-                let accepted_ban = await message.reactions.get(`🅱`).users.size - 1
-                let deny_ban = await message.reactions.get(`❎`).users.size - 3
-                if (deny_ban > accepted_ban){
-                    await message.reactions.get(`🅱`).users.forEach(async user => {
-                        await fs.appendFileSync(`./${message.id}.txt`, `[YES] ${user.username}, ID: ${user.id}\n`);
-                    })
+            if (message.embeds[0]){
+                if (message.embeds[0].title == "`Discord » Блокировка участника.`"){ 
+                    let field_user = server.members.find(m => `<@${m.id}>` == message.embeds[0].fields[0].value.split('\n')[1].split(/ +/)[1]);
+                    let reason_ban = await message.embeds[0].fields[1].value;
+                    let who_send = await server.members.find(m => `<@${m.id}>` == message.embeds[0].fields[0].value.split('\n')[0].split(/ +/)[1]);
+                    if (event_userid == "283606560436125696"){
+                        channel.send(`\`Администратор ${member.displayName} отказал запрос на блокировку пользователя:\` <@${field_user.id}>\n\`Причина бана: ${reason_ban}, отправлял: ${who_send.displayName}\``);
+                        return message.delete();
+                    }
+                    let accepted_ban = await message.reactions.get(`🅱`).users.size - 1
+                    let deny_ban = await message.reactions.get(`❎`).users.size - 3
+                    if (deny_ban > accepted_ban){
+                        await message.reactions.get(`🅱`).users.forEach(async user => {
+                            await fs.appendFileSync(`./${message.id}.txt`, `[YES] ${user.username}, ID: ${user.id}\n`);
+                        })
 
-                    await message.reactions.get(`❎`).users.forEach(async user => {
-                        await fs.appendFileSync(`./${message.id}.txt`, `[NO] ${user.username}, ID: ${user.id}\n`);
-                    })
-                    await channel.send(`\`Пользователь\` <@${field_user.id}> \`был отказан от блокировки по голосованию модераторов. Причина бана: ${reason_ban}!\nОтправлял: ${who_send.displayName}, за блокировку: ${+accepted_ban}, против: ${+deny_ban + 2}\``, { files: [ `./${message.id}.txt` ] });
-                    await message.delete();
-                    fs.unlinkSync(`./${message.id}.txt`);
-                    return
+                        await message.reactions.get(`❎`).users.forEach(async user => {
+                            await fs.appendFileSync(`./${message.id}.txt`, `[NO] ${user.username}, ID: ${user.id}\n`);
+                        })
+                        await channel.send(`\`Пользователь\` <@${field_user.id}> \`был отказан от блокировки по голосованию модераторов. Причина бана: ${reason_ban}!\nОтправлял: ${who_send.displayName}, за блокировку: ${+accepted_ban}, против: ${+deny_ban + 2}\``, { files: [ `./${message.id}.txt` ] });
+                        await message.delete();
+                        fs.unlinkSync(`./${message.id}.txt`);
+                        return
+                    }
                 }
             }
         }
