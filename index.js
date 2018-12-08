@@ -440,7 +440,6 @@ bot.on('raw', async event => {
             }
         }else if (event_emoji_name == "🅱"){
             if (message.embeds[0].title == "`Discord » Блокировка участника.`"){
-                if (message.reactions.size != 2) return 
                 let field_user = server.members.find(m => `<@${m.id}>` == message.embeds[0].fields[0].value.split('\n')[1].split(/ +/)[1]);
                 if (event_userid == "283606560436125696"){
                     channel.send(`\`Модератор ${member.displayName} одобрил запрос на блокировку пользователя:\` <@${field_user.id}>`);
@@ -452,8 +451,7 @@ bot.on('raw', async event => {
                 }
             }
         }else if (event_emoji_name == "❎"){
-            if (message.embeds[0].title == "`Discord » Блокировка участника.`"){
-                if (message.reactions.size != 2) return 
+            if (message.embeds[0].title == "`Discord » Блокировка участника.`"){ 
                 let field_user = server.members.find(m => `<@${m.id}>` == message.embeds[0].fields[0].value.split('\n')[1].split(/ +/)[1]);
                 if (event_userid == "283606560436125696"){
                     channel.send(`\`Модератор ${member.displayName} отказал запрос на блокировку пользователя:\` <@${field_user.id}>`);
