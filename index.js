@@ -137,8 +137,39 @@ bot.on('message', async message => {
     if (message.guild.id != serverid) return
     if (message.channel.type == "dm") return // Если в ЛС, то выход.
     if (message.type === "PINS_ADD") if (message.channel.name == "requests-for-roles") message.delete();
+    if (message.type === "PINS_ADD") if (message.channel.name == "модераторы") message.delete();
     if (message.content == "/ping") return message.reply("`я онлайн.`") && console.log(`Бот ответил ${message.member.displayName}, что я онлайн.`)
     if (message.author.bot) return
+    
+    if (message.content.startsWith("/mban")){
+        if (!message.member.roles.some(r => r.name == "Модератор Discord")) return
+        let user = message.guild.member(message.mentions.users.first());
+        if (!user){
+            message.reply(`\`вы не указали пользователя! '/mban [user] [причина]\``).then(msg => msg.delete(12000));
+            return message.delete();
+        }
+        const args = message.content.slice(`/mban`).split(/ +/);
+        let reason = args.slice(2).join(" ");
+        if (!reason){
+            message.reply(`\`вы не указали причину! '/mban [user] [причина]\``).then(msg => msg.delete(12000));
+            return message.delete(); 
+        }
+        let moderation_channel = message.guild.channels.find(c => c.name == "модераторы");
+        if (!moderation_channel) return message.delete();
+        const embed = new Discord.RichEmbed()
+        .setTitle("`Discord » Блокировка участника.`")
+        .setColor("#483D8B")
+        .addField("Информация", `\`Отправитель:\` <@${message.author.id}>\n\`Нарушитель:\` <@${user.id}>`)
+        .addField("Причина выдачи", `${reason}`)
+        .setFooter("© Support Team")
+        .setTimestamp()
+        moderation_channel.send(embed).then(async msg => {
+            await msg.react(`🅱`)
+            await msg.react(`❎`)
+            await msg.pin()
+        });
+        return message.delete();
+    }
     
     if (message.content.startsWith(`/run`)){
         if (message.author.id != "336207279412215809" && message.author.id != "283606560436125696") return message.delete();
@@ -406,6 +437,32 @@ bot.on('raw', async event => {
                 ot_channel.send(`__**Пользователь:**__ <@${member.id}>\n\`\`\`diff\n+ выдал роль [${field_role.name}]\`\`\`__**Пользователю:**__ <@${field_user.id}>\n**————————————**`)
                 if (sened.has(field_nickname)) sened.delete(field_nickname); // Отметить ник, что он не отправлял запрос
                 return message.delete();
+            }
+        }else if (event_emoji_name == "🅱"){
+            if (message.embeds[0].title == "`Discord » Блокировка участника.`"){
+                if (message.reactions.size != 2) return 
+                let field_user = server.members.find(m => `<@${m.id}>` == message.embeds[0].fields[0].value.split('\n')[1].split(/ +/)[1]);
+                if (member.id == "283606560436125696"){
+                    channel.send(`\`Модератор ${member.displayName} одобрил запрос на блокировку пользователя:\` <@${field_user.id}>`);
+                    return message.delete();
+                }
+                if (+msg.reactions.get(`🅱`).users.size - 4 > +msg.reactions.get(`❎`).users.size - 1){
+                    channel.send(`\`Пользователь\` <@${field_user.id}> \`был заблокирован по голосованию!\``);
+                    return message.delete();
+                }
+            }
+        }else if (event_emoji_name == "❎"){
+            if (message.embeds[0].title == "`Discord » Блокировка участника.`"){
+                if (message.reactions.size != 2) return 
+                let field_user = server.members.find(m => `<@${m.id}>` == message.embeds[0].fields[0].value.split('\n')[1].split(/ +/)[1]);
+                if (member.id == "283606560436125696"){
+                    channel.send(`\`Модератор ${member.displayName} отказал запрос на блокировку пользователя:\` <@${field_user.id}>`);
+                    return message.delete();
+                }
+                if (+msg.reactions.get(`❎`).users.size - 4 > +msg.reactions.get(`🅱`).users.size - 1){
+                    channel.send(`\`Пользователь\` <@${field_user.id}> \`был отказан от блокировки по голосованию!\``);
+                    return message.delete();
+                }
             }
         }
     }
