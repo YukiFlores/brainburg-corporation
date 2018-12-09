@@ -408,7 +408,7 @@ bot.on('raw', async event => {
         let member = server.members.find(m => m.id == event_userid); // Получить пользователя с сервера
         
         if (event_emoji_name == "🗑"){
-            if (member.roles.some(r => r.name == "Модераторы Discord")){
+            if (member.roles.some(r => r.name == "Модераторы Discord") || message.member.hasPermission("ADMINISTRATOR")){
                 if (message.content.length > 0 && message.attachments.size > 0){
                     await server.channels.find(c => c.name == "dis-log").send(`\`Модератор удалил файл с сообщением:\` ${message.content}`, { files: [ `${message.attachments.first().url}` ] });
                     message.delete();
