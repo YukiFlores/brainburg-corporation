@@ -115,7 +115,7 @@ let manytags = [
 "RIFA",
 "AZTEC",  
 ];
-let rolesgg = ["Сотрудник правительства", "Сотрудник автошколы", "Сотрудник банка", "Академист FBI", "Сотрудник FBI", "Сотрудник S.W.A.T.", "Сотрудник LSPD", "Сотрудник SFPD", "Сотрудник LVPD", "Сотрудник RCSD", "Сотрудник ТСР", "Военнослужащий LSa", "Военнослужащий SFa", "Сотрудник LSMC", "Сотрудник SFMC", "Сотрудник LVMC", "Сотрудник LSFM", "Сотрудник SFFM", "Сотрудник LVFM", "Rifa", "Ballas", "Grove Street", "Vagos", "Night Wolfs", "Aztecas", "Yakuza", "La Cosa Nostra",  "Russian Mafia",  "Warlock MC"]
+let rolesgg = ["Сотрудник правительства", "Сотрудник автошколы", "Сотрудник банка", "Академист FBI", "Сотрудник FBI", "Сотрудник S.W.A.T.", "Сотрудник LSPD", "Сотрудник SFPD", "Сотрудник LVPD", "Сотрудник RCSD", "Сотрудник ТСР", "Военнослужащий LSa", "Военнослужащий SFa", "Сотрудник LSMC", "Сотрудник SFMC", "Сотрудник LVMC", "Сотрудник LSFM", "Сотрудник SFFM", "Сотрудник LVFM", "Сотрудник ОПЭ СМИ", "Сотрудник ОТ СМИ", "Rifa", "Ballas", "Grove Street", "Vagos", "Night Wolfs", "Aztecas", "Yakuza", "La Cosa Nostra",  "Russian Mafia",  "Warlock MC"]
 let canremoverole = ["⚃ Администратор 4 ур. ⚃", "⚂ Администратор 3 ур. ⚂", "Модератор Discord", "Министры", "Лидеры фракций", "Заместители фракций"];
 let gos_roles = ["Сотрудник правительства", "Сотрудник автошколы", "Сотрудник банка", "Академист FBI", "Сотрудник FBI", "Сотрудник S.W.A.T.", "Сотрудник LSPD", "Сотрудник SFPD", "Сотрудник LVPD", "Сотрудник RCSD", "Сотрудник ТСР", "Военнослужащий LSa", "Военнослужащий SFa", "Сотрудник LSMC", "Сотрудник SFMC", "Сотрудник LVMC"];
 let mafia_roles = ["Rifa", "Ballas", "Grove Street", "Vagos", "Night Wolfs", "Aztecas", "Yakuza", "La Cosa Nostra",  "Russian Mafia",  "Warlock MC"];
