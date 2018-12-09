@@ -279,7 +279,7 @@ bot.on('message', async message => {
             return message.channel.send(`\`[ERROR]\` <@${message.member.id}> \`у вас нет прав доступа к данной категории.\``).then(msg => msg.delete(17000));
         }
         
-        message.reply(`\`напишите причину снятия роли.\``).then(answer => {
+        message.reply(`\`напишите причину снятия роли. Пример: "ушёл псж"\``).then(answer => {
             message.channel.awaitMessages(response => response.member.id == message.member.id, {
                 max: 1,
                 time: 60000,
@@ -311,8 +311,12 @@ bot.on('message', async message => {
                     }
                 }
             }
-            message.react(`📛`) // Поставить знак стоп под отправленным сообщением.
+            message.react(`📛`); // Поставить знак стоп под отправленным сообщением.
             return // Выход
+        }
+        if (message.member.roles.some(r => ["Министры", "Лидеры фракций", "Заместители фракций"].includes(r.name))){
+            message.reply(`\`[ERROR]\` \`Вам нельзя отправлять запрос на выдачу роли.\``).then(msg => msg.delete(12000));
+            return message.delete();
         }
         // Проверить все доступные тэги
         for (var i in manytags){
