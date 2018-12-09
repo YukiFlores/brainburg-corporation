@@ -301,6 +301,7 @@ bot.on('message', async message => {
     }
 
     if (message.content.toLowerCase().includes("роль") && !message.content.toLowerCase().includes(`сними`) && !message.content.toLowerCase().includes(`снять`)){
+        if (message.channel.name != "🌐welcome" && message.channel.name != "модераторы") return
         // Проверить невалидный ли ник.
         if (nrpnames.has(message.member.displayName)){
             if(message.member.roles.some(r=>rolesgg.includes(r.name)) ) {
