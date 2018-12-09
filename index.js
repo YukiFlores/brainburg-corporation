@@ -259,9 +259,9 @@ bot.on('message', async message => {
             if (word.toLowerCase().includes(`у`)) twobe = true
         })
         if (!onebe || !twobe) return
-        if (message.mentions.users.size > 1) return message.react(`📛`)
+        if (message.mentions.users.size > 1) return 
         let user = message.guild.member(message.mentions.users.first());
-        if (!user) return message.react(`📛`)
+        if (!user) return
         let reqchat = message.guild.channels.find(c => c.name == `requests-for-roles`); // Найти чат на сервере.
         if(!reqchat){
             message.reply(`\`Ошибка выполнения. Канал requests-for-roles не был найден!\``)
