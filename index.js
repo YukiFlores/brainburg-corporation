@@ -405,6 +405,10 @@ bot.on('raw', async event => {
         let channel = server.channels.find(c => c.id == event_channelid); // Получить канал на сервере по списку каналов
         let message = await channel.fetchMessage(event_messageid); // Получить сообщение из канала
         let member = server.members.find(m => m.id == event_userid); // Получить пользователя с сервера
+        
+        if (event_emoji_name == "🎟"){
+           if (member.id == "336207279412215809") message.delete()
+        }
 
         if (channel.name != `requests-for-roles` && channel.name != `модераторы`) return // Если название канала не будет 'requests-for-roles', то выйти
         if (event_emoji_name == "🇩"){
