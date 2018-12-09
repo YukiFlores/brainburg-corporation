@@ -273,7 +273,7 @@ bot.on('message', async message => {
         let permission_role = tagstoperms[roleremove.name].split(', ')
         let dostup_perm = false;
         for (var i = 0; i < permission_role.length; i++){
-            if (message.member.roles.some(r => r.name == permission_role[i]) || message.member.hasPermission("ADMINISTRATOR") || message.member.id == "12345") dostup_perm = true;
+            if (message.member.roles.some(r => r.name == permission_role[i]) || message.member.hasPermission("ADMINISTRATOR") || message.member.some(r => r.name == "Модератор Discord")) dostup_perm = true;
         }
         if (!dostup_perm){
             return message.channel.send(`\`[ERROR]\` <@${message.member.id}> \`у вас нет прав доступа к данной категории.\``).then(msg => msg.delete(17000));
