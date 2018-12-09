@@ -410,13 +410,13 @@ bot.on('raw', async event => {
         if (event_emoji_name == '🗑'){
             if (member.roles.some(r => r.name == "Модератор Discord") || member.hasPermission("ADMINISTRATOR")){
                 if (message.content.length > 0 && message.attachments.size > 0){
-                    await server.channels.find(c => c.name == "dis-log").send(`\`Модератор удалил файл с сообщением:\` ${message.content}`, { files: [ `${message.attachments.first().url}` ] });
+                    await server.channels.find(c => c.name == "dis-log").send(`\`Модератор\` <@${member.id}> \`удалил файл с сообщением от\` <@${message.author.id}> \`в\` <#${channel.id}> - ${message.content}`, { files: [ `${message.attachments.first().url}` ] });
                     message.delete();
                 }else if (message.content.length <= 0){
-                    await server.channels.find(c => c.name == "dis-log").send(`\`Модератор удалил файл.\``, { files: [ `${message.attachments.first().url}` ] });
+                    await server.channels.find(c => c.name == "dis-log").send(`\`Модератор\` <@${member.id}> \`удалил файл от\` <@${message.author.id}> \`в\` <#${channel.id}> `, { files: [ `${message.attachments.first().url}` ] });
                     message.delete();
                 }else if (message.attachments.size <= 0){
-                    await server.channels.find(c => c.name == "dis-log").send(`\`Модератор удалил сообщение:\` ${message.content}`);
+                    await server.channels.find(c => c.name == "dis-log").send(`\`Модератор удалил сообщение от\` <@${message.author.id}> \`в\` <#${channel.id}> - ${message.content}`);
                     message.delete();
                 }
             }
