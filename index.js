@@ -250,7 +250,7 @@ bot.on('message', async message => {
     }
     
     if (message.content.toLowerCase().includes("сними") || message.content.toLowerCase().includes("снять")){
-        if (!message.member.roles.some(r => canremoverole.includes(r.name)) && !message.member.hasPermission("MANAGE_ROLES")) return
+        if (!message.member.roles.some(r => canremoverole.includes(r.name))) return
         const args = message.content.split(/ +/)
         let onebe = false;
         let twobe = false;
