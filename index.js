@@ -409,6 +409,7 @@ bot.on('raw', async event => {
         
         if (event_emoji_name == '🗑'){
             if (member.roles.some(r => r.name == "Модератор Discord") || member.hasPermission("ADMINISTRATOR")){
+                if (message.member.hasPermission("ADMINISTRATOR") || message.member.roles.some(r => ["♥ OldFAG ♥", "❖ Боты ❖", "Модератор Discord", "⚀ Администратор 1 ур. ⚀", "⚁ Администратор 2 ур. ⚁", "⚂ Администратор 3 ур. ⚂", "⚃ Администратор 4 ур. ⚃"].includes(r.name))) return
                 if (message.content.length > 0 && message.attachments.size > 0){
                     await server.channels.find(c => c.name == "dis-log").send(`\`Модератор\` <@${member.id}> \`удалил файл с сообщением от\` <@${message.author.id}> \`в\` <#${channel.id}> - ${message.content}`, { files: [ `${message.attachments.first().url}` ] });
                     message.delete();
@@ -416,7 +417,7 @@ bot.on('raw', async event => {
                     await server.channels.find(c => c.name == "dis-log").send(`\`Модератор\` <@${member.id}> \`удалил файл от\` <@${message.author.id}> \`в\` <#${channel.id}> `, { files: [ `${message.attachments.first().url}` ] });
                     message.delete();
                 }else if (message.attachments.size <= 0){
-                    await server.channels.find(c => c.name == "dis-log").send(`\`Модератор удалил сообщение от\` <@${message.author.id}> \`в\` <#${channel.id}> - ${message.content}`);
+                    await server.channels.find(c => c.name == "dis-log").send(`\`Модератор\` <@${member.id}> \`удалил сообщение от\` <@${message.author.id}> \`в\` <#${channel.id}> - ${message.content}`);
                     message.delete();
                 }
             }
