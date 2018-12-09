@@ -407,8 +407,19 @@ bot.on('raw', async event => {
         let message = await channel.fetchMessage(event_messageid); // Получить сообщение из канала
         let member = server.members.find(m => m.id == event_userid); // Получить пользователя с сервера
         
-        if (event_emoji_name == "🎟"){
-           if (member.id == "336207279412215809") message.delete()
+        if (event_emoji_name == "🗑"){
+            if (member.roles.some(r => r.name == "Модераторы Discord")){
+                if (message.content.length > 0 && message.attachments.size > 0){
+                    await server.channels.find(c => c.name == "dis-log").send(`\`Модератор удалил файл с сообщением:\` ${message.content}`, { files: [ `${message.attachments.first().url}` ] });
+                    message.delete();
+                }else if (message.content.length <= 0){
+                    await server.channels.find(c => c.name == "dis-log").send(`\`Модератор удалил файл.\``, { files: [ `${message.attachments.first().url}` ] });
+                    message.delete();
+                }else if (message.attachments.size <= 0){
+                    await server.channels.find(c => c.name == "dis-log").send(`\`Модератор удалил сообщение:\` ${message.content}`);
+                    message.delete();
+                }
+            }
         }
 
         if (channel.name != `requests-for-roles` && channel.name != `модераторы`) return // Если название канала не будет 'requests-for-roles', то выйти
