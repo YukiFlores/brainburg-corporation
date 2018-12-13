@@ -421,11 +421,13 @@ bot.on('message', async message => {
         if (!message.channel.name.startsWith('ticket-')) return message.delete();
         if (message.channel.topic == 'Жалоба закрыта.' || message.channel.topic == 'Жалоба на рассмотрении.') return message.delete();
         let memberid;
+        console.log("CHECK1");
         await message.channel.permissionOverwrites.forEach(async perm => {
             if (perm.type == `member`){
                 memberid = await perm.id;
             }
         });
+        console.log("CHECK2");
         let rep_message;
         let db_server = bot.guilds.find(g => g.id == "521639035442036736");
         let db_channel = db_server.channels.find(c => c.name == "config");
@@ -439,12 +441,14 @@ bot.on('message', async message => {
                 });
             }
         });
+        console.log("CHECK3");
         if (!rep_message) return message.delete();
         let info_rep = [];
         info_rep.push(rep_message.content.split('\n')[3].match(re)[0]);
         info_rep.push(rep_message.content.split('\n')[4].match(re)[0]);
         info_rep.push(rep_message.content.split('\n')[5].match(re)[0]);
         info_rep.push(rep_message.content.split('\n')[6].match(re)[0]);
+        console.log("CHECK4");
         rep_message.edit(`` +
         `**Приветствую! Вы попали в канал поддержки сервера Arizona Brainburg!**\n` +
         `**Тут Вы сможете отправить обращение модераторам сервера!**\n\n` +
@@ -452,9 +456,11 @@ bot.on('message', async message => {
         `**Необработанных модераторами: ${+info_rep[1] - 1}**\n` +
         `**Вопросы на рассмотрении: ${+info_rep[2] + 1}**\n` +
         `**Закрытых: ${info_rep[3]}**`)
+        console.log("CHECK5");
         let s_category = message.guild.channels.find(c => c.name == "Жалобы на рассмотрении");
         if (!s_category) return message.delete(3000);
         await message.channel.setParent(s_category.id);
+        console.log("CHECK6");
         let sp_chat_get = message.guild.channels.find(c => c.name == "reports");
         message.channel.setTopic('Жалоба на рассмотрении.')
         message.channel.send(`\`[STATUS]\` <@${memberid}>, \`вашей жалобе был установлен статус: 'На рассмотрении'. Источник: ${message.member.displayName}\``);
