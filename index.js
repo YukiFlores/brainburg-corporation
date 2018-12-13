@@ -144,7 +144,7 @@ bot.on('message', async message => {
     if (message.content == "/ping") return message.reply("`я онлайн.`") && console.log(`Бот ответил ${message.member.displayName}, что я онлайн.`)
     if (message.author.bot) return
     
-    /*
+    
     let re = /(\d+(\.\d)*)/i;
     
     if (!support_loop.has(message.guild.id) && message.channel.name != "support"){
@@ -639,7 +639,7 @@ bot.on('message', async message => {
         sp_chat_get.send(`\`[CLOSE]\` \`Модератор ${message.member.displayName} установил жалобе\` <#${message.channel.id}> \`статус 'Закрыта'.\``);
         message.delete();
     }
-    */
+    
     
     if (message.content.startsWith("/mkick")){
         if (!message.member.roles.some(r => r.name == "Модератор Discord") && !message.member.hasPermission("ADMINISTRATOR")) return
