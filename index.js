@@ -417,7 +417,7 @@ bot.on('message', async message => {
     }
 
     if (message.content == '/hold'){
-        if (!message.member.hasPermission("MANAGE_ROLES") && !message.roles.some(r => ["Модератор Discord", "⚂ Администратор 3 ур. ⚂", "⚃ Администратор 4 ур. ⚃"].includes(r.name))) return message.delete();
+        if (!message.member.hasPermission("MANAGE_ROLES") && !message.member.roles.some(r => ["Модератор Discord", "⚂ Администратор 3 ур. ⚂", "⚃ Администратор 4 ур. ⚃"].includes(r.name))) return message.delete();
         if (!message.channel.name.startsWith('ticket-')) return message.delete();
         if (message.channel.topic == 'Жалоба закрыта.' || message.channel.topic == 'Жалоба на рассмотрении.') return message.delete();
         let memberid;
@@ -467,7 +467,7 @@ bot.on('message', async message => {
     }
 
     if (message.content == '/active'){
-        if (!message.member.hasPermission("MANAGE_ROLES") && !message.roles.some(r => ["Модератор Discord", "⚂ Администратор 3 ур. ⚂", "⚃ Администратор 4 ур. ⚃"].includes(r.name))) return message.delete();
+        if (!message.member.hasPermission("MANAGE_ROLES") && !message.member.roles.some(r => ["Модератор Discord", "⚂ Администратор 3 ур. ⚂", "⚃ Администратор 4 ур. ⚃"].includes(r.name))) return message.delete();
         if (!message.channel.name.startsWith('ticket-')) return message.delete();
         if (message.channel.topic == 'Жалоба закрыта.' || message.channel.topic != 'Жалоба на рассмотрении.') return message.delete();
         let memberid;
@@ -513,7 +513,7 @@ bot.on('message', async message => {
     }
     
     if (message.content == '/toadmin'){
-        if (!message.member.hasPermission("MANAGE_ROLES") && !message.roles.some(r => ["Модератор Discord", "⚂ Администратор 3 ур. ⚂", "⚃ Администратор 4 ур. ⚃"].includes(r.name))) return message.delete();
+        if (!message.member.hasPermission("MANAGE_ROLES") && !message.member.roles.some(r => ["Модератор Discord", "⚂ Администратор 3 ур. ⚂", "⚃ Администратор 4 ур. ⚃"].includes(r.name))) return message.delete();
         if (!message.channel.name.startsWith('ticket-')) return message.delete();
         if (message.channel.topic == 'Жалоба закрыта.') return message.delete();
         let memberid;
@@ -585,7 +585,7 @@ bot.on('message', async message => {
     }
 
     if (message.content == '/close'){
-        if (!message.member.hasPermission("MANAGE_ROLES") && !message.roles.some(r => ["Модератор Discord", "⚂ Администратор 3 ур. ⚂", "⚃ Администратор 4 ур. ⚃"].includes(r.name))) return message.delete();
+        if (!message.member.hasPermission("MANAGE_ROLES") && !message.member.roles.some(r => ["Модератор Discord", "⚂ Администратор 3 ур. ⚂", "⚃ Администратор 4 ур. ⚃"].includes(r.name))) return message.delete();
         if (!message.channel.name.startsWith('ticket-')) return message.delete();
         if (message.channel.topic == 'Жалоба закрыта.') return message.delete();
         let full_support = false;
