@@ -508,7 +508,7 @@ bot.on('message', async message => {
         let sp_chat_get = message.guild.channels.find(c => c.name == "reports");
         message.channel.setTopic('Жалоба в обработке.');
         message.channel.send(`\`[STATUS]\` <@${memberid}>, \`вашей жалобе был установлен статус: 'В обработке'. Источник: ${message.member.displayName}\``);
-        sp_chat_get.send(`\`[UNWAIT]\` \`Модератор ${message.member.displayName} убрал жалобе\` <#${message.channel.id}> \`статус 'На рассмотрении'.\``);
+        sp_chat_get.send(`\`[ACTIVE]\` \`Модератор ${message.member.displayName} убрал жалобе\` <#${message.channel.id}> \`статус 'На рассмотрении'.\``);
         message.delete();
     }
     
