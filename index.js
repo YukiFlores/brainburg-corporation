@@ -324,6 +324,27 @@ bot.on('message', async message => {
             await channel.setParent(s_category.id);
             await channel.setTopic('Жалоба в обработке.')
             let moderator_role = await message.guild.roles.find(r => r.name == 'Модератор Discord');
+            let bot_role = await message.guild.roles.find(r => r.name == '[-] Moderation [-]');
+            
+            await channel.overwritePermissions(bot_role, {
+            // 🌐welcome PERMISSIONS
+            CREATE_INSTANT_INVITE: true,
+            MANAGE_CHANNELS: true,
+            MANAGE_ROLES: true,
+            MANAGE_WEBHOOKS: true,
+            // TEXT PERMISSIONS
+            VIEW_CHANNEL: true,
+            SEND_MESSAGES: true,
+            SEND_TTS_MESSAGES: true,
+            MANAGE_MESSAGES: true,
+            EMBED_LINKS: true,
+            ATTACH_FILES: true,
+            READ_MESSAGE_HISTORY: true,
+            MENTION_EVERYONE: true,
+            USE_EXTERNAL_EMOJIS: true,
+            ADD_REACTIONS: true,
+            })  
+            
             await channel.overwritePermissions(moderator_role, {
             // 🌐welcome PERMISSIONS
             CREATE_INSTANT_INVITE: false,
