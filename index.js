@@ -8,6 +8,7 @@ const snyatie = new Set(); // КД
 const antikick = new Set();
 const support_cooldown = new Set(); // Запросы от игроков.
 const support_loop = new Set(); 
+const warn_cooldown = new Set();
 
 tagstoperms = ({
     "Сотрудник правительства": "ГС Гос, ЗГС Гос, ГС правительства, ЗГС правительства, Следящий правительства, Лидер правительства, Премьер-Министр, Мэр ЛС, Мэр СФ, Мэр ЛВ",
@@ -657,6 +658,15 @@ bot.on('message', async message => {
             MENTION_EVERYONE: false,
             USE_EXTERNAL_EMOJIS: false,
             ADD_REACTIONS: false,
+        }) 
+        await message.channel.overwritePermissions(message.guild.roles.find(r => r.name == 'Модератор Discord'), {
+            SEND_MESSAGES: false,
+        }) 
+        await message.channel.overwritePermissions(message.guild.roles.find(r => r.name == '⚂ Администратор 3 ур. ⚂'), {
+            SEND_MESSAGES: false,
+        }) 
+        await message.channel.overwritePermissions(message.guild.roles.find(r => r.name == '⚃ Администратор 4 ур. ⚃'), {
+            SEND_MESSAGES: false,
         }) 
         let sp_chat_get = message.guild.channels.find(c => c.name == "reports");
         message.channel.setTopic('Жалоба закрыта.');
