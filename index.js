@@ -641,6 +641,7 @@ bot.on('message', async message => {
             `**Вопросы на рассмотрении: ${info_rep[2]}**\n` +
             `**Закрытых: ${+info_rep[3] + 1}**`)
         }
+        message.channel.setTopic('Жалоба закрыта.');
         await message.channel.overwritePermissions(message.guild.members.find(m => m.id == memberid), {
             // 🌐welcome PERMISSIONS
             CREATE_INSTANT_INVITE: false,
@@ -669,7 +670,6 @@ bot.on('message', async message => {
             SEND_MESSAGES: false,
         }) 
         let sp_chat_get = message.guild.channels.find(c => c.name == "reports");
-        message.channel.setTopic('Жалоба закрыта.');
         message.channel.send(`\`[STATUS]\` <@${memberid}>, \`вашей жалобе был установлен статус: 'Закрыта'. Источник: ${message.member.displayName}\``);
         sp_chat_get.send(`\`[CLOSE]\` \`Модератор ${message.member.displayName} установил жалобе\` <#${message.channel.id}> \`статус 'Закрыта'.\``);
         message.delete();
