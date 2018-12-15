@@ -420,169 +420,308 @@ bot.on('message', async message => {
     if (message.content == '/hold'){
         if (!message.member.hasPermission("MANAGE_ROLES") && !message.member.roles.some(r => ["Модератор Discord", "⚂ Администратор 3 ур. ⚂", "⚃ Администратор 4 ур. ⚃"].includes(r.name))) return message.delete();
         if (!message.channel.name.startsWith('ticket-')) return message.delete();
-        if (message.channel.topic == 'Жалоба закрыта.' || message.channel.topic == 'Жалоба на рассмотрении.') return message.delete();
-        let memberid;
+        if (message.channel.topic != 'Жалоба в обработке.') return message.delete();
+        let memberid = 'не найден';
         await message.channel.permissionOverwrites.forEach(async perm => {
-            if (perm.type == `member`){
-                memberid = await perm.id;
-            }
+            if (perm.type == 'member') memberid = await perm.id;
         });
-        let rep_message;
-        let db_server = bot.guilds.find(g => g.id == "521639035442036736");
-        let db_channel = db_server.channels.find(c => c.name == "config");
-        await db_channel.fetchMessages().then(async messages => {
-            let db_msg = messages.find(m => m.content.startsWith(`MESSAGEID:`));
-            if (db_msg){
-                id_mm = db_msg.content.match(re)[0]
-                let ticket_channel = message.guild.channels.find(c => c.name == 'support');
-                await ticket_channel.fetchMessages().then(async messagestwo => {
-                    rep_message = await messagestwo.find(m => m.id == id_mm);
-                });
+        if (memberid == 'не найден'){
+            let s_category = message.guild.channels.find(c => c.name == "Жалобы на рассмотрении");
+            if (!s_category){
+                message.channel.send(`\`[SYSTEM]\` \`Произошла ошибка! Категория 'Жалобы на рассмотрении' не была найдена.\``);
+                return message.delete();
             }
-        });
-        console.log("CHECK3");
-        if (!rep_message) return message.delete();
-        let info_rep = [];
-        info_rep.push(rep_message.content.split('\n')[3].match(re)[0]);
-        info_rep.push(rep_message.content.split('\n')[4].match(re)[0]);
-        info_rep.push(rep_message.content.split('\n')[5].match(re)[0]);
-        info_rep.push(rep_message.content.split('\n')[6].match(re)[0]);
-        console.log("CHECK4");
-        rep_message.edit(`` +
-        `**Приветствую! Вы попали в канал поддержки сервера Arizona Brainburg!**\n` +
-        `**Тут Вы сможете отправить обращение модераторам сервера!**\n\n` +
-        `**Количество вопросов за все время: ${info_rep[0]}**\n` +
-        `**Необработанных модераторами: ${+info_rep[1] - 1}**\n` +
-        `**Вопросы на рассмотрении: ${+info_rep[2] + 1}**\n` +
-        `**Закрытых: ${info_rep[3]}**`)
-        console.log("CHECK5");
-        let s_category = message.guild.channels.find(c => c.name == "Жалобы на рассмотрении");
-        if (!s_category) return message.delete(3000);
-        await message.channel.setParent(s_category.id);
-        console.log("CHECK6");
-        let sp_chat_get = message.guild.channels.find(c => c.name == "reports");
-        message.channel.setTopic('Жалоба на рассмотрении.')
-        message.channel.send(`\`[STATUS]\` <@${memberid}>, \`вашей жалобе был установлен статус: 'На рассмотрении'. Источник: ${message.member.displayName}\``);
-        sp_chat_get.send(`\`[HOLD]\` \`Модератор ${message.member.displayName} установил жалобе\` <#${message.channel.id}> \`статус 'На рассмотрении'.\``);
-        message.delete();
+            message.channel.setTopic('Жалоба на рассмотрении.');
+            await message.channel.setParent(s_category.id);
+            let sp_chat_get = message.guild.channels.find(c => c.name == "reports");
+
+            let rep_message;
+            let db_server = bot.guilds.find(g => g.id == "521639035442036736");
+            let db_channel = db_server.channels.find(c => c.name == "config");
+            await db_channel.fetchMessages().then(async messages => {
+                let db_msg = messages.find(m => m.content.startsWith(`MESSAGEID:`));
+                if (db_msg){
+                    id_mm = db_msg.content.match(re)[0]
+                    let ticket_channel = message.guild.channels.find(c => c.name == 'support');
+                    await ticket_channel.fetchMessages().then(async messagestwo => {
+                        rep_message = await messagestwo.find(m => m.id == id_mm);
+                    });
+                }
+            });
+            if (!rep_message) return message.delete();
+            let info_rep = [];
+            info_rep.push(rep_message.content.split('\n')[3].match(re)[0]);
+            info_rep.push(rep_message.content.split('\n')[4].match(re)[0]);
+            info_rep.push(rep_message.content.split('\n')[5].match(re)[0]);
+            info_rep.push(rep_message.content.split('\n')[6].match(re)[0]);
+            rep_message.edit(`` +
+            `**Приветствую! Вы попали в канал поддержки сервера Arizona Brainburg!**\n` +
+            `**Тут Вы сможете отправить обращение модераторам сервера!**\n\n` +
+            `**Количество вопросов за все время: ${info_rep[0]}**\n` +
+            `**Необработанных модераторами: ${+info_rep[1] - 1}**\n` +
+            `**Вопросы на рассмотрении: ${+info_rep[2] + 1}**\n` +
+            `**Закрытых: ${info_rep[3]}**`)
+            message.channel.send(`\`[STATUS]\` \`Данной жалобе был установлен статус: 'На рассмотрении'. Источник: ${message.member.displayName}\``);
+            sp_chat_get.send(`\`[HOLD]\` \`Модератор ${message.member.displayName} установил жалобе\` <#${message.channel.id}> \`статус 'На рассмотрении'.\``);
+            message.delete();
+        }else{
+            let s_category = message.guild.channels.find(c => c.name == "Жалобы на рассмотрении");
+            if (!s_category){
+                message.channel.send(`\`[SYSTEM]\` \`Произошла ошибка! Категория 'Жалобы на рассмотрении' не была найдена.\``);
+                return message.delete();
+            }
+            message.channel.setTopic('Жалоба на рассмотрении.');
+            await message.channel.setParent(s_category.id);
+            let sp_chat_get = message.guild.channels.find(c => c.name == "reports");
+
+            let rep_message;
+            let db_server = bot.guilds.find(g => g.id == "521639035442036736");
+            let db_channel = db_server.channels.find(c => c.name == "config");
+            await db_channel.fetchMessages().then(async messages => {
+                let db_msg = messages.find(m => m.content.startsWith(`MESSAGEID:`));
+                if (db_msg){
+                    id_mm = db_msg.content.match(re)[0]
+                    let ticket_channel = message.guild.channels.find(c => c.name == 'support');
+                    await ticket_channel.fetchMessages().then(async messagestwo => {
+                        rep_message = await messagestwo.find(m => m.id == id_mm);
+                    });
+                }
+            });
+            if (!rep_message) return message.delete();
+            let info_rep = [];
+            info_rep.push(rep_message.content.split('\n')[3].match(re)[0]);
+            info_rep.push(rep_message.content.split('\n')[4].match(re)[0]);
+            info_rep.push(rep_message.content.split('\n')[5].match(re)[0]);
+            info_rep.push(rep_message.content.split('\n')[6].match(re)[0]);
+            rep_message.edit(`` +
+            `**Приветствую! Вы попали в канал поддержки сервера Arizona Brainburg!**\n` +
+            `**Тут Вы сможете отправить обращение модераторам сервера!**\n\n` +
+            `**Количество вопросов за все время: ${info_rep[0]}**\n` +
+            `**Необработанных модераторами: ${+info_rep[1] - 1}**\n` +
+            `**Вопросы на рассмотрении: ${+info_rep[2] + 1}**\n` +
+            `**Закрытых: ${info_rep[3]}**`)
+            message.channel.send(`\`[STATUS]\` <@${memberid}>, \`вашей жалобе был установлен статус: 'На рассмотрении'. Источник: ${message.member.displayName}\``);
+            sp_chat_get.send(`\`[HOLD]\` \`Модератор ${message.member.displayName} установил жалобе\` <#${message.channel.id}> \`статус 'На рассмотрении'.\``);
+            message.delete();
+        }
     }
 
     if (message.content == '/active'){
         if (!message.member.hasPermission("MANAGE_ROLES") && !message.member.roles.some(r => ["Модератор Discord", "⚂ Администратор 3 ур. ⚂", "⚃ Администратор 4 ур. ⚃"].includes(r.name))) return message.delete();
         if (!message.channel.name.startsWith('ticket-')) return message.delete();
         if (message.channel.topic == 'Жалоба закрыта.' || message.channel.topic != 'Жалоба на рассмотрении.') return message.delete();
-        let memberid;
+        let memberid = 'не найден';
         await message.channel.permissionOverwrites.forEach(async perm => {
             if (perm.type == `member`){
                 memberid = await perm.id;
             }
         });
-        let rep_message;
-        let db_server = bot.guilds.find(g => g.id == "521639035442036736");
-        let db_channel = db_server.channels.find(c => c.name == "config");
-        await db_channel.fetchMessages().then(async messages => {
-            let db_msg = messages.find(m => m.content.startsWith(`MESSAGEID:`));
-            if (db_msg){
-                id_mm = db_msg.content.match(re)[0]
-                let ticket_channel = message.guild.channels.find(c => c.name == 'support');
-                await ticket_channel.fetchMessages().then(async messagestwo => {
-                    rep_message = await messagestwo.find(m => m.id == id_mm);
-                });
-            }
-        });
-        if (!rep_message) return message.delete();
-        let info_rep = [];
-        info_rep.push(rep_message.content.split('\n')[3].match(re)[0]);
-        info_rep.push(rep_message.content.split('\n')[4].match(re)[0]);
-        info_rep.push(rep_message.content.split('\n')[5].match(re)[0]);
-        info_rep.push(rep_message.content.split('\n')[6].match(re)[0]);
-        rep_message.edit(`` +
-            `**Приветствую! Вы попали в канал поддержки сервера Arizona Brainburg!**\n` +
-            `**Тут Вы сможете отправить обращение модераторам сервера!**\n\n` +
-            `**Количество вопросов за все время: ${info_rep[0]}**\n` +
-            `**Необработанных модераторами: ${+info_rep[1] + 1}**\n` +
-            `**Вопросы на рассмотрении: ${+info_rep[2] - 1}**\n` +
-            `**Закрытых: ${info_rep[3]}**`)
-        let s_category = message.guild.channels.find(c => c.name == "Активные жалобы");
-        if (!s_category) return message.delete(3000);
-        await message.channel.setParent(s_category.id);
-        let sp_chat_get = message.guild.channels.find(c => c.name == "reports");
-        message.channel.setTopic('Жалоба в обработке.');
-        message.channel.send(`\`[STATUS]\` <@${memberid}>, \`вашей жалобе был установлен статус: 'В обработке'. Источник: ${message.member.displayName}\``);
-        sp_chat_get.send(`\`[ACTIVE]\` \`Модератор ${message.member.displayName} убрал жалобе\` <#${message.channel.id}> \`статус 'На рассмотрении'.\``);
-        message.delete();
+        if (memberid == 'не найден'){
+            let rep_message;
+            let db_server = bot.guilds.find(g => g.id == "521639035442036736");
+            let db_channel = db_server.channels.find(c => c.name == "config");
+            await db_channel.fetchMessages().then(async messages => {
+                let db_msg = messages.find(m => m.content.startsWith(`MESSAGEID:`));
+                if (db_msg){
+                    id_mm = db_msg.content.match(re)[0]
+                    let ticket_channel = message.guild.channels.find(c => c.name == 'support');
+                    await ticket_channel.fetchMessages().then(async messagestwo => {
+                        rep_message = await messagestwo.find(m => m.id == id_mm);
+                    });
+                }
+            });
+            if (!rep_message) return message.delete();
+            let info_rep = [];
+            info_rep.push(rep_message.content.split('\n')[3].match(re)[0]);
+            info_rep.push(rep_message.content.split('\n')[4].match(re)[0]);
+            info_rep.push(rep_message.content.split('\n')[5].match(re)[0]);
+            info_rep.push(rep_message.content.split('\n')[6].match(re)[0]);
+            rep_message.edit(`` +
+                `**Приветствую! Вы попали в канал поддержки сервера Arizona Brainburg!**\n` +
+                `**Тут Вы сможете отправить обращение модераторам сервера!**\n\n` +
+                `**Количество вопросов за все время: ${info_rep[0]}**\n` +
+                `**Необработанных модераторами: ${+info_rep[1] + 1}**\n` +
+                `**Вопросы на рассмотрении: ${+info_rep[2] - 1}**\n` +
+                `**Закрытых: ${info_rep[3]}**`)
+            let s_category = message.guild.channels.find(c => c.name == "Активные жалобы");
+            if (!s_category) return message.delete(3000);
+            await message.channel.setParent(s_category.id);
+            let sp_chat_get = message.guild.channels.find(c => c.name == "reports");
+            message.channel.setTopic('Жалоба в обработке.');
+            message.channel.send(`\`[STATUS]\` \`Данной жалобе был установлен статус: 'В обработке'. Источник: ${message.member.displayName}\``);
+            sp_chat_get.send(`\`[ACTIVE]\` \`Модератор ${message.member.displayName} убрал жалобе\` <#${message.channel.id}> \`статус 'На рассмотрении'.\``);
+            message.delete();
+        }else{
+            let rep_message;
+            let db_server = bot.guilds.find(g => g.id == "521639035442036736");
+            let db_channel = db_server.channels.find(c => c.name == "config");
+            await db_channel.fetchMessages().then(async messages => {
+                let db_msg = messages.find(m => m.content.startsWith(`MESSAGEID:`));
+                if (db_msg){
+                    id_mm = db_msg.content.match(re)[0]
+                    let ticket_channel = message.guild.channels.find(c => c.name == 'support');
+                    await ticket_channel.fetchMessages().then(async messagestwo => {
+                        rep_message = await messagestwo.find(m => m.id == id_mm);
+                    });
+                }
+            });
+            if (!rep_message) return message.delete();
+            let info_rep = [];
+            info_rep.push(rep_message.content.split('\n')[3].match(re)[0]);
+            info_rep.push(rep_message.content.split('\n')[4].match(re)[0]);
+            info_rep.push(rep_message.content.split('\n')[5].match(re)[0]);
+            info_rep.push(rep_message.content.split('\n')[6].match(re)[0]);
+            rep_message.edit(`` +
+                `**Приветствую! Вы попали в канал поддержки сервера Arizona Brainburg!**\n` +
+                `**Тут Вы сможете отправить обращение модераторам сервера!**\n\n` +
+                `**Количество вопросов за все время: ${info_rep[0]}**\n` +
+                `**Необработанных модераторами: ${+info_rep[1] + 1}**\n` +
+                `**Вопросы на рассмотрении: ${+info_rep[2] - 1}**\n` +
+                `**Закрытых: ${info_rep[3]}**`)
+            let s_category = message.guild.channels.find(c => c.name == "Активные жалобы");
+            if (!s_category) return message.delete(3000);
+            await message.channel.setParent(s_category.id);
+            let sp_chat_get = message.guild.channels.find(c => c.name == "reports");
+            message.channel.setTopic('Жалоба в обработке.');
+            message.channel.send(`\`[STATUS]\` <@${memberid}>, \`вашей жалобе был установлен статус: 'В обработке'. Источник: ${message.member.displayName}\``);
+            sp_chat_get.send(`\`[ACTIVE]\` \`Модератор ${message.member.displayName} убрал жалобе\` <#${message.channel.id}> \`статус 'На рассмотрении'.\``);
+            message.delete();
+        }
     }
     
     if (message.content == '/toadmin'){
         if (!message.member.hasPermission("MANAGE_ROLES") && !message.member.roles.some(r => ["Модератор Discord", "⚂ Администратор 3 ур. ⚂", "⚃ Администратор 4 ур. ⚃"].includes(r.name))) return message.delete();
         if (!message.channel.name.startsWith('ticket-')) return message.delete();
         if (message.channel.topic == 'Жалоба закрыта.') return message.delete();
-        let memberid;
+        let memberid = 'не найден';
         await message.channel.permissionOverwrites.forEach(async perm => {
             if (perm.type == `member`){
                 memberid = await perm.id;
             }
         });
-        await message.channel.overwritePermissions(message.guild.roles.find(r => r.name == 'Модератор Discord'), {
-            // 🌐welcome PERMISSIONS
-            CREATE_INSTANT_INVITE: false,
-            MANAGE_CHANNELS: false,
-            MANAGE_ROLES: false,
-            MANAGE_WEBHOOKS: false,
-            // TEXT PERMISSIONS
-            VIEW_CHANNEL: false,
-            SEND_MESSAGES: false,
-            SEND_TTS_MESSAGES: false,
-            MANAGE_MESSAGES: false,
-            EMBED_LINKS: false,
-            ATTACH_FILES: false,
-            READ_MESSAGE_HISTORY: false,
-            MENTION_EVERYONE: false,
-            USE_EXTERNAL_EMOJIS: false,
-            ADD_REACTIONS: false,
-        })  
+        if (memberid == 'не найден'){
+            await message.channel.overwritePermissions(message.guild.roles.find(r => r.name == 'Модератор Discord'), {
+                // 🌐welcome PERMISSIONS
+                CREATE_INSTANT_INVITE: false,
+                MANAGE_CHANNELS: false,
+                MANAGE_ROLES: false,
+                MANAGE_WEBHOOKS: false,
+                // TEXT PERMISSIONS
+                VIEW_CHANNEL: false,
+                SEND_MESSAGES: false,
+                SEND_TTS_MESSAGES: false,
+                MANAGE_MESSAGES: false,
+                EMBED_LINKS: false,
+                ATTACH_FILES: false,
+                READ_MESSAGE_HISTORY: false,
+                MENTION_EVERYONE: false,
+                USE_EXTERNAL_EMOJIS: false,
+                ADD_REACTIONS: false,
+            })  
 
-        await message.channel.overwritePermissions(message.guild.roles.find(r => r.name == '⚃ Администратор 4 ур. ⚃'), {
-            // 🌐welcome PERMISSIONS
-            CREATE_INSTANT_INVITE: false,
-            MANAGE_CHANNELS: false,
-            MANAGE_ROLES: false,
-            MANAGE_WEBHOOKS: false,
-            // TEXT PERMISSIONS
-            VIEW_CHANNEL: true,
-            SEND_MESSAGES: true,
-            SEND_TTS_MESSAGES: false,
-            MANAGE_MESSAGES: false,
-            EMBED_LINKS: true,
-            ATTACH_FILES: true,
-            READ_MESSAGE_HISTORY: true,
-            MENTION_EVERYONE: false,
-            USE_EXTERNAL_EMOJIS: false,
-            ADD_REACTIONS: false,
-        }) 
+            await message.channel.overwritePermissions(message.guild.roles.find(r => r.name == '⚃ Администратор 4 ур. ⚃'), {
+                // 🌐welcome PERMISSIONS
+                CREATE_INSTANT_INVITE: false,
+                MANAGE_CHANNELS: false,
+                MANAGE_ROLES: false,
+                MANAGE_WEBHOOKS: false,
+                // TEXT PERMISSIONS
+                VIEW_CHANNEL: true,
+                SEND_MESSAGES: true,
+                SEND_TTS_MESSAGES: false,
+                MANAGE_MESSAGES: false,
+                EMBED_LINKS: true,
+                ATTACH_FILES: true,
+                READ_MESSAGE_HISTORY: true,
+                MENTION_EVERYONE: false,
+                USE_EXTERNAL_EMOJIS: false,
+                ADD_REACTIONS: false,
+            }) 
 
-        await message.channel.overwritePermissions(message.guild.roles.find(r => r.name == '⚂ Администратор 3 ур. ⚂'), {
-            // 🌐welcome PERMISSIONS
-            CREATE_INSTANT_INVITE: false,
-            MANAGE_CHANNELS: false,
-            MANAGE_ROLES: false,
-            MANAGE_WEBHOOKS: false,
-            // TEXT PERMISSIONS
-            VIEW_CHANNEL: true,
-            SEND_MESSAGES: true,
-            SEND_TTS_MESSAGES: false,
-            MANAGE_MESSAGES: false,
-            EMBED_LINKS: true,
-            ATTACH_FILES: true,
-            READ_MESSAGE_HISTORY: true,
-            MENTION_EVERYONE: false,
-            USE_EXTERNAL_EMOJIS: false,
-            ADD_REACTIONS: false,
-        })  
-        let sp_chat_get = message.guild.channels.find(c => c.name == "reports");
-        message.channel.send(`\`[STATUS]\` <@${memberid}>, \`ваше обращение было передано администрации. Источник: ${message.member.displayName}\``);
-        sp_chat_get.send(`\`[ADMIN]\` \`Модератор ${message.member.displayName} передал жалобу\` <#${message.channel.id}> \`администрации.\``);
-        message.delete();
+            await message.channel.overwritePermissions(message.guild.roles.find(r => r.name == '⚂ Администратор 3 ур. ⚂'), {
+                // 🌐welcome PERMISSIONS
+                CREATE_INSTANT_INVITE: false,
+                MANAGE_CHANNELS: false,
+                MANAGE_ROLES: false,
+                MANAGE_WEBHOOKS: false,
+                // TEXT PERMISSIONS
+                VIEW_CHANNEL: true,
+                SEND_MESSAGES: true,
+                SEND_TTS_MESSAGES: false,
+                MANAGE_MESSAGES: false,
+                EMBED_LINKS: true,
+                ATTACH_FILES: true,
+                READ_MESSAGE_HISTORY: true,
+                MENTION_EVERYONE: false,
+                USE_EXTERNAL_EMOJIS: false,
+                ADD_REACTIONS: false,
+            })  
+            let sp_chat_get = message.guild.channels.find(c => c.name == "reports");
+            message.channel.send(`\`[STATUS]\` \`Данное обращение было передано администрации. Источник: ${message.member.displayName}\``);
+            sp_chat_get.send(`\`[ADMIN]\` \`Модератор ${message.member.displayName} передал жалобу\` <#${message.channel.id}> \`администрации.\``);
+            message.delete();
+        }else{
+            await message.channel.overwritePermissions(message.guild.roles.find(r => r.name == 'Модератор Discord'), {
+                // 🌐welcome PERMISSIONS
+                CREATE_INSTANT_INVITE: false,
+                MANAGE_CHANNELS: false,
+                MANAGE_ROLES: false,
+                MANAGE_WEBHOOKS: false,
+                // TEXT PERMISSIONS
+                VIEW_CHANNEL: false,
+                SEND_MESSAGES: false,
+                SEND_TTS_MESSAGES: false,
+                MANAGE_MESSAGES: false,
+                EMBED_LINKS: false,
+                ATTACH_FILES: false,
+                READ_MESSAGE_HISTORY: false,
+                MENTION_EVERYONE: false,
+                USE_EXTERNAL_EMOJIS: false,
+                ADD_REACTIONS: false,
+            })  
+
+            await message.channel.overwritePermissions(message.guild.roles.find(r => r.name == '⚃ Администратор 4 ур. ⚃'), {
+                // 🌐welcome PERMISSIONS
+                CREATE_INSTANT_INVITE: false,
+                MANAGE_CHANNELS: false,
+                MANAGE_ROLES: false,
+                MANAGE_WEBHOOKS: false,
+                // TEXT PERMISSIONS
+                VIEW_CHANNEL: true,
+                SEND_MESSAGES: true,
+                SEND_TTS_MESSAGES: false,
+                MANAGE_MESSAGES: false,
+                EMBED_LINKS: true,
+                ATTACH_FILES: true,
+                READ_MESSAGE_HISTORY: true,
+                MENTION_EVERYONE: false,
+                USE_EXTERNAL_EMOJIS: false,
+                ADD_REACTIONS: false,
+            }) 
+
+            await message.channel.overwritePermissions(message.guild.roles.find(r => r.name == '⚂ Администратор 3 ур. ⚂'), {
+                // 🌐welcome PERMISSIONS
+                CREATE_INSTANT_INVITE: false,
+                MANAGE_CHANNELS: false,
+                MANAGE_ROLES: false,
+                MANAGE_WEBHOOKS: false,
+                // TEXT PERMISSIONS
+                VIEW_CHANNEL: true,
+                SEND_MESSAGES: true,
+                SEND_TTS_MESSAGES: false,
+                MANAGE_MESSAGES: false,
+                EMBED_LINKS: true,
+                ATTACH_FILES: true,
+                READ_MESSAGE_HISTORY: true,
+                MENTION_EVERYONE: false,
+                USE_EXTERNAL_EMOJIS: false,
+                ADD_REACTIONS: false,
+            })  
+            let sp_chat_get = message.guild.channels.find(c => c.name == "reports");
+            message.channel.send(`\`[STATUS]\` <@${memberid}>, \`ваше обращение было передано администрации. Источник: ${message.member.displayName}\``);
+            sp_chat_get.send(`\`[ADMIN]\` \`Модератор ${message.member.displayName} передал жалобу\` <#${message.channel.id}> \`администрации.\``);
+            message.delete();
+        }
     }
 
     if (message.content == '/close'){
@@ -599,80 +738,133 @@ bot.on('message', async message => {
             message.reply(`\`корзина заполнена! Повторите попытку чуть позже!\``).then(msg => msg.delete(12000));
             return message.delete();  
         }
-        let memberid;
+        let memberid = 'не найден';
         await message.channel.permissionOverwrites.forEach(async perm => {
             if (perm.type == `member`){
             memberid = await perm.id;
             }
         });
-        let rep_message;
-        let db_server = bot.guilds.find(g => g.id == "521639035442036736");
-        let db_channel = db_server.channels.find(c => c.name == "config");
-        await db_channel.fetchMessages().then(async messages => {
-            let db_msg = messages.find(m => m.content.startsWith(`MESSAGEID:`));
-            if (db_msg){
-                id_mm = db_msg.content.match(re)[0]
-                let ticket_channel = message.guild.channels.find(c => c.name == 'support');
-                await ticket_channel.fetchMessages().then(async messagestwo => {
-                    rep_message = await messagestwo.find(m => m.id == id_mm);
-                });
+        if (memberid == 'не найден'){
+            let rep_message;
+            let db_server = bot.guilds.find(g => g.id == "521639035442036736");
+            let db_channel = db_server.channels.find(c => c.name == "config");
+            await db_channel.fetchMessages().then(async messages => {
+                let db_msg = messages.find(m => m.content.startsWith(`MESSAGEID:`));
+                if (db_msg){
+                    id_mm = db_msg.content.match(re)[0]
+                    let ticket_channel = message.guild.channels.find(c => c.name == 'support');
+                    await ticket_channel.fetchMessages().then(async messagestwo => {
+                        rep_message = await messagestwo.find(m => m.id == id_mm);
+                    });
+                }
+            });
+            if (!rep_message) return message.delete();
+            let info_rep = [];
+            info_rep.push(rep_message.content.split('\n')[3].match(re)[0]);
+            info_rep.push(rep_message.content.split('\n')[4].match(re)[0]);
+            info_rep.push(rep_message.content.split('\n')[5].match(re)[0]);
+            info_rep.push(rep_message.content.split('\n')[6].match(re)[0]);
+            if (message.channel.topic == 'Жалоба на рассмотрении.'){
+                rep_message.edit(`` +
+                `**Приветствую! Вы попали в канал поддержки сервера Arizona Brainburg!**\n` +
+                `**Тут Вы сможете отправить обращение модераторам сервера!**\n\n` +
+                `**Количество вопросов за все время: ${info_rep[0]}**\n` +
+                `**Необработанных модераторами: ${info_rep[1]}**\n` +
+                `**Вопросы на рассмотрении: ${+info_rep[2] - 1}**\n` +
+                `**Закрытых: ${+info_rep[3] + 1}**`)
+            }else{
+                rep_message.edit(`` +
+                `**Приветствую! Вы попали в канал поддержки сервера Arizona Brainburg!**\n` +
+                `**Тут Вы сможете отправить обращение модераторам сервера!**\n\n` +
+                `**Количество вопросов за все время: ${info_rep[0]}**\n` +
+                `**Необработанных модераторами: ${+info_rep[1] - 1}**\n` +
+                `**Вопросы на рассмотрении: ${info_rep[2]}**\n` +
+                `**Закрытых: ${+info_rep[3] + 1}**`)
             }
-        });
-        if (!rep_message) return message.delete();
-        let info_rep = [];
-        info_rep.push(rep_message.content.split('\n')[3].match(re)[0]);
-        info_rep.push(rep_message.content.split('\n')[4].match(re)[0]);
-        info_rep.push(rep_message.content.split('\n')[5].match(re)[0]);
-        info_rep.push(rep_message.content.split('\n')[6].match(re)[0]);
-        if (message.channel.topic == 'Жалоба на рассмотрении.'){
-            rep_message.edit(`` +
-            `**Приветствую! Вы попали в канал поддержки сервера Arizona Brainburg!**\n` +
-            `**Тут Вы сможете отправить обращение модераторам сервера!**\n\n` +
-            `**Количество вопросов за все время: ${info_rep[0]}**\n` +
-            `**Необработанных модераторами: ${info_rep[1]}**\n` +
-            `**Вопросы на рассмотрении: ${+info_rep[2] - 1}**\n` +
-            `**Закрытых: ${+info_rep[3] + 1}**`)
+            message.channel.setTopic('Жалоба закрыта.');
+            await message.channel.overwritePermissions(message.guild.roles.find(r => r.name == 'Модератор Discord'), {
+                SEND_MESSAGES: false,
+            }) 
+            await message.channel.overwritePermissions(message.guild.roles.find(r => r.name == '⚂ Администратор 3 ур. ⚂'), {
+                SEND_MESSAGES: false,
+            }) 
+            await message.channel.overwritePermissions(message.guild.roles.find(r => r.name == '⚃ Администратор 4 ур. ⚃'), {
+                SEND_MESSAGES: false,
+            }) 
+            let sp_chat_get = message.guild.channels.find(c => c.name == "reports");
+            message.channel.send(`\`[STATUS]\` \`Данной жалобе был установлен статус: 'Закрыта'. Источник: ${message.member.displayName}\``);
+            sp_chat_get.send(`\`[CLOSE]\` \`Модератор ${message.member.displayName} установил жалобе\` <#${message.channel.id}> \`статус 'Закрыта'.\``);
+            message.delete();
         }else{
-            rep_message.edit(`` +
-            `**Приветствую! Вы попали в канал поддержки сервера Arizona Brainburg!**\n` +
-            `**Тут Вы сможете отправить обращение модераторам сервера!**\n\n` +
-            `**Количество вопросов за все время: ${info_rep[0]}**\n` +
-            `**Необработанных модераторами: ${+info_rep[1] - 1}**\n` +
-            `**Вопросы на рассмотрении: ${info_rep[2]}**\n` +
-            `**Закрытых: ${+info_rep[3] + 1}**`)
+            let rep_message;
+            let db_server = bot.guilds.find(g => g.id == "521639035442036736");
+            let db_channel = db_server.channels.find(c => c.name == "config");
+            await db_channel.fetchMessages().then(async messages => {
+                let db_msg = messages.find(m => m.content.startsWith(`MESSAGEID:`));
+                if (db_msg){
+                    id_mm = db_msg.content.match(re)[0]
+                    let ticket_channel = message.guild.channels.find(c => c.name == 'support');
+                    await ticket_channel.fetchMessages().then(async messagestwo => {
+                        rep_message = await messagestwo.find(m => m.id == id_mm);
+                    });
+                }
+            });
+            if (!rep_message) return message.delete();
+            let info_rep = [];
+            info_rep.push(rep_message.content.split('\n')[3].match(re)[0]);
+            info_rep.push(rep_message.content.split('\n')[4].match(re)[0]);
+            info_rep.push(rep_message.content.split('\n')[5].match(re)[0]);
+            info_rep.push(rep_message.content.split('\n')[6].match(re)[0]);
+            if (message.channel.topic == 'Жалоба на рассмотрении.'){
+                rep_message.edit(`` +
+                `**Приветствую! Вы попали в канал поддержки сервера Arizona Brainburg!**\n` +
+                `**Тут Вы сможете отправить обращение модераторам сервера!**\n\n` +
+                `**Количество вопросов за все время: ${info_rep[0]}**\n` +
+                `**Необработанных модераторами: ${info_rep[1]}**\n` +
+                `**Вопросы на рассмотрении: ${+info_rep[2] - 1}**\n` +
+                `**Закрытых: ${+info_rep[3] + 1}**`)
+            }else{
+                rep_message.edit(`` +
+                `**Приветствую! Вы попали в канал поддержки сервера Arizona Brainburg!**\n` +
+                `**Тут Вы сможете отправить обращение модераторам сервера!**\n\n` +
+                `**Количество вопросов за все время: ${info_rep[0]}**\n` +
+                `**Необработанных модераторами: ${+info_rep[1] - 1}**\n` +
+                `**Вопросы на рассмотрении: ${info_rep[2]}**\n` +
+                `**Закрытых: ${+info_rep[3] + 1}**`)
+            }
+            message.channel.setTopic('Жалоба закрыта.');
+            await message.channel.overwritePermissions(message.guild.members.find(m => m.id == memberid), {
+                // 🌐welcome PERMISSIONS
+                CREATE_INSTANT_INVITE: false,
+                MANAGE_CHANNELS: false,
+                MANAGE_ROLES: false,
+                MANAGE_WEBHOOKS: false,
+                // TEXT PERMISSIONS
+                VIEW_CHANNEL: true,
+                SEND_MESSAGES: false,
+                SEND_TTS_MESSAGES: false,
+                MANAGE_MESSAGES: false,
+                EMBED_LINKS: false,
+                ATTACH_FILES: false,
+                READ_MESSAGE_HISTORY: true,
+                MENTION_EVERYONE: false,
+                USE_EXTERNAL_EMOJIS: false,
+                ADD_REACTIONS: false,
+            }) 
+            await message.channel.overwritePermissions(message.guild.roles.find(r => r.name == 'Модератор Discord'), {
+                SEND_MESSAGES: false,
+            }) 
+            await message.channel.overwritePermissions(message.guild.roles.find(r => r.name == '⚂ Администратор 3 ур. ⚂'), {
+                SEND_MESSAGES: false,
+            }) 
+            await message.channel.overwritePermissions(message.guild.roles.find(r => r.name == '⚃ Администратор 4 ур. ⚃'), {
+                SEND_MESSAGES: false,
+            }) 
+            let sp_chat_get = message.guild.channels.find(c => c.name == "reports");
+            message.channel.send(`\`[STATUS]\` <@${memberid}>, \`вашей жалобе был установлен статус: 'Закрыта'. Источник: ${message.member.displayName}\``);
+            sp_chat_get.send(`\`[CLOSE]\` \`Модератор ${message.member.displayName} установил жалобе\` <#${message.channel.id}> \`статус 'Закрыта'.\``);
+            message.delete();
         }
-        message.channel.setTopic('Жалоба закрыта.');
-        await message.channel.overwritePermissions(message.guild.members.find(m => m.id == memberid), {
-            // 🌐welcome PERMISSIONS
-            CREATE_INSTANT_INVITE: false,
-            MANAGE_CHANNELS: false,
-            MANAGE_ROLES: false,
-            MANAGE_WEBHOOKS: false,
-            // TEXT PERMISSIONS
-            VIEW_CHANNEL: true,
-            SEND_MESSAGES: false,
-            SEND_TTS_MESSAGES: false,
-            MANAGE_MESSAGES: false,
-            EMBED_LINKS: false,
-            ATTACH_FILES: false,
-            READ_MESSAGE_HISTORY: true,
-            MENTION_EVERYONE: false,
-            USE_EXTERNAL_EMOJIS: false,
-            ADD_REACTIONS: false,
-        }) 
-        await message.channel.overwritePermissions(message.guild.roles.find(r => r.name == 'Модератор Discord'), {
-            SEND_MESSAGES: false,
-        }) 
-        await message.channel.overwritePermissions(message.guild.roles.find(r => r.name == '⚂ Администратор 3 ур. ⚂'), {
-            SEND_MESSAGES: false,
-        }) 
-        await message.channel.overwritePermissions(message.guild.roles.find(r => r.name == '⚃ Администратор 4 ур. ⚃'), {
-            SEND_MESSAGES: false,
-        }) 
-        let sp_chat_get = message.guild.channels.find(c => c.name == "reports");
-        message.channel.send(`\`[STATUS]\` <@${memberid}>, \`вашей жалобе был установлен статус: 'Закрыта'. Источник: ${message.member.displayName}\``);
-        sp_chat_get.send(`\`[CLOSE]\` \`Модератор ${message.member.displayName} установил жалобе\` <#${message.channel.id}> \`статус 'Закрыта'.\``);
-        message.delete();
     }
     
     
