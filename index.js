@@ -440,7 +440,7 @@ bot.on('message', async message => {
                 message.channel.send(`\`[SYSTEM]\` \`Произошла ошибка! Категория 'Жалобы на рассмотрении' не была найдена.\``);
                 return message.delete();
             }
-            message.channel.setTopic('Жалоба на рассмотрении.');
+            await message.channel.setTopic('Жалоба на рассмотрении.');
             await message.channel.setParent(s_category.id);
             let sp_chat_get = message.guild.channels.find(c => c.name == "reports");
 
@@ -479,7 +479,7 @@ bot.on('message', async message => {
                 message.channel.send(`\`[SYSTEM]\` \`Произошла ошибка! Категория 'Жалобы на рассмотрении' не была найдена.\``);
                 return message.delete();
             }
-            message.channel.setTopic('Жалоба на рассмотрении.');
+            await message.channel.setTopic('Жалоба на рассмотрении.');
             await message.channel.setParent(s_category.id);
             let sp_chat_get = message.guild.channels.find(c => c.name == "reports");
 
