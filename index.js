@@ -564,7 +564,7 @@ bot.on('message', async message => {
             if (!s_category) return message.delete(3000);
             await message.channel.setParent(s_category.id);
             let sp_chat_get = message.guild.channels.find(c => c.name == "reports");
-            message.channel.setTopic('Жалоба в обработке.');
+            await message.channel.setTopic('Жалоба в обработке.');
             message.channel.send(`\`[STATUS]\` \`Данной жалобе был установлен статус: 'В обработке'. Источник: ${message.member.displayName}\``);
             sp_chat_get.send(`\`[ACTIVE]\` \`Модератор ${message.member.displayName} убрал жалобе\` <#${message.channel.id}> \`статус 'На рассмотрении'.\``);
             return message.delete();
@@ -599,7 +599,7 @@ bot.on('message', async message => {
             if (!s_category) return message.delete(3000);
             await message.channel.setParent(s_category.id);
             let sp_chat_get = message.guild.channels.find(c => c.name == "reports");
-            message.channel.setTopic('Жалоба в обработке.');
+            await message.channel.setTopic('Жалоба в обработке.');
             message.channel.send(`\`[STATUS]\` <@${memberid}>, \`вашей жалобе был установлен статус: 'В обработке'. Источник: ${message.member.displayName}\``);
             sp_chat_get.send(`\`[ACTIVE]\` \`Модератор ${message.member.displayName} убрал жалобе\` <#${message.channel.id}> \`статус 'На рассмотрении'.\``);
             return message.delete();
@@ -823,7 +823,7 @@ bot.on('message', async message => {
             await message.channel.overwritePermissions(message.guild.roles.find(r => r.name == '⚃ Администратор 4 ур. ⚃'), {
                 SEND_MESSAGES: false,
             }) 
-            message.channel.setTopic('Жалоба закрыта.');
+            await message.channel.setTopic('Жалоба закрыта.');
             let sp_chat_get = message.guild.channels.find(c => c.name == "reports");
             message.channel.send(`\`[STATUS]\` \`Данной жалобе был установлен статус: 'Закрыта'. Источник: ${message.member.displayName}\``);
             sp_chat_get.send(`\`[CLOSE]\` \`Модератор ${message.member.displayName} установил жалобе\` <#${message.channel.id}> \`статус 'Закрыта'.\``);
@@ -893,7 +893,7 @@ bot.on('message', async message => {
             await message.channel.overwritePermissions(message.guild.roles.find(r => r.name == '⚃ Администратор 4 ур. ⚃'), {
                 SEND_MESSAGES: false,
             }) 
-            message.channel.setTopic('Жалоба закрыта.');
+            await message.channel.setTopic('Жалоба закрыта.');
             let sp_chat_get = message.guild.channels.find(c => c.name == "reports");
             message.channel.send(`\`[STATUS]\` <@${memberid}>, \`вашей жалобе был установлен статус: 'Закрыта'. Источник: ${message.member.displayName}\``);
             sp_chat_get.send(`\`[CLOSE]\` \`Модератор ${message.member.displayName} установил жалобе\` <#${message.channel.id}> \`статус 'Закрыта'.\``);
