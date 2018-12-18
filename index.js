@@ -9,6 +9,7 @@ const antikick = new Set();
 const support_cooldown = new Set(); // Запросы от игроков.
 const support_loop = new Set(); 
 const warn_cooldown = new Set();
+const cmd_cooldown = new Set();
 
 tagstoperms = ({
     "Сотрудник правительства": "ГС Гос, ЗГС Гос, ГС правительства, ЗГС правительства, Следящий правительства, Лидер правительства, Премьер-Министр, Мэр ЛС, Мэр СФ, Мэр ЛВ",
@@ -421,6 +422,14 @@ bot.on('message', async message => {
         if (!message.member.hasPermission("MANAGE_ROLES") && !message.member.roles.some(r => ["Модератор Discord", "⚂ Администратор 3 ур. ⚂", "⚃ Администратор 4 ур. ⚃"].includes(r.name))) return message.delete();
         if (!message.channel.name.startsWith('ticket-')) return message.delete();
         if (message.channel.topic != 'Жалоба в обработке.') return message.delete();
+        if (cmd_cooldown.has(message.guild.id)){
+            message.reply(`\`[ERROR]\` \`Пожалуста попробуте через несколько секунд!\``).then(msg => msg.delete(12000));
+            return message.delete()
+        }
+        cmd_cooldown.add(message.guild.id);
+        setTimeout(() => {
+            if (cmd_cooldown.has(message.guild.id)) cmd_cooldown.delete(message.guild.id);
+        }, 15000);
         let memberid = 'не найден';
         await message.channel.permissionOverwrites.forEach(async perm => {
             if (perm.type == 'member') memberid = await perm.id;
@@ -510,6 +519,14 @@ bot.on('message', async message => {
         if (!message.member.hasPermission("MANAGE_ROLES") && !message.member.roles.some(r => ["Модератор Discord", "⚂ Администратор 3 ур. ⚂", "⚃ Администратор 4 ур. ⚃"].includes(r.name))) return message.delete();
         if (!message.channel.name.startsWith('ticket-')) return message.delete();
         if (message.channel.topic == 'Жалоба закрыта.' || message.channel.topic != 'Жалоба на рассмотрении.') return message.delete();
+        if (cmd_cooldown.has(message.guild.id)){
+            message.reply(`\`[ERROR]\` \`Пожалуста попробуте через несколько секунд!\``).then(msg => msg.delete(12000));
+            return message.delete()
+        }
+        cmd_cooldown.add(message.guild.id);
+        setTimeout(() => {
+            if (cmd_cooldown.has(message.guild.id)) cmd_cooldown.delete(message.guild.id);
+        }, 15000);
         let memberid = 'не найден';
         await message.channel.permissionOverwrites.forEach(async perm => {
             if (perm.type == `member`){
@@ -593,6 +610,14 @@ bot.on('message', async message => {
         if (!message.member.hasPermission("MANAGE_ROLES") && !message.member.roles.some(r => ["Модератор Discord", "⚂ Администратор 3 ур. ⚂", "⚃ Администратор 4 ур. ⚃"].includes(r.name))) return message.delete();
         if (!message.channel.name.startsWith('ticket-')) return message.delete();
         if (message.channel.topic == 'Жалоба закрыта.') return message.delete();
+        if (cmd_cooldown.has(message.guild.id)){
+            message.reply(`\`[ERROR]\` \`Пожалуста попробуте через несколько секунд!\``).then(msg => msg.delete(12000));
+            return message.delete()
+        }
+        cmd_cooldown.add(message.guild.id);
+        setTimeout(() => {
+            if (cmd_cooldown.has(message.guild.id)) cmd_cooldown.delete(message.guild.id);
+        }, 15000);
         let memberid = 'не найден';
         await message.channel.permissionOverwrites.forEach(async perm => {
             if (perm.type == `member`){
@@ -728,6 +753,14 @@ bot.on('message', async message => {
         if (!message.member.hasPermission("MANAGE_ROLES") && !message.member.roles.some(r => ["Модератор Discord", "⚂ Администратор 3 ур. ⚂", "⚃ Администратор 4 ур. ⚃"].includes(r.name))) return message.delete();
         if (!message.channel.name.startsWith('ticket-')) return message.delete();
         if (message.channel.topic == 'Жалоба закрыта.') return message.delete();
+        if (cmd_cooldown.has(message.guild.id)){
+            message.reply(`\`[ERROR]\` \`Пожалуста попробуте через несколько секунд!\``).then(msg => msg.delete(12000));
+            return message.delete()
+        }
+        cmd_cooldown.add(message.guild.id);
+        setTimeout(() => {
+            if (cmd_cooldown.has(message.guild.id)) cmd_cooldown.delete(message.guild.id);
+        }, 15000);
         let full_support = false;
         let s_category = message.guild.channels.find(c => c.name == "Корзина");
         if (!s_category) return message.delete(3000);
