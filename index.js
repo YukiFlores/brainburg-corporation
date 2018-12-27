@@ -214,7 +214,7 @@ bot.on('message', async message => {
         let dataserver = bot.guilds.find(g => g.id == "521639035442036736");
         dataserver.channels.forEach(async channel => {
             if (channel.type=="text"){
-                if (dataserver.channels.find(c => c.id == channel.parentID).name == 'db_users'){
+                if (channel.name != "config"){
                     await channel.fetchMessages({limit: 1}).then(async messages => {
                         if (messages.size == 1){
                             messages.forEach(async sacc => {
@@ -1009,7 +1009,7 @@ bot.on('message', async message => {
         let acc = db_server.channels.find(c => c.name == user.id);
         if (!acc){
           await db_server.createChannel(user.id).then(async chan => {
-            await chan.setParent(db_parent.id);
+            await chan.setTopic(`<@${user.id}> - ${user.displayName}`);
             acc = chan;
           });
         }
@@ -1550,7 +1550,7 @@ bot.on('message', async message => {
         let acc = db_server.channels.find(c => c.name == user.id);
         if (!acc){
           await db_server.createChannel(user.id).then(async chan => {
-            await chan.setParent(db_parent.id);
+            await chan.setTopic(`<@${user.id}> - ${user.displayName}`);
             acc = chan;
           });
         }
