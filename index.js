@@ -1700,7 +1700,7 @@ bot.on('message', async message => {
                 ot_channel.send(`__**Пользователь:**__ <@${message.author.id}>\n\`\`\`diff\n- снял роль [${roleremove.name}]\`\`\`__**Пользователю:**__ <@${user.id}>\n__**По причине:**__ \`${collected.first().content}\`\n**————————————**`)
                 collected.first().delete();
                 answer.delete();
-                return message.react(`✅`);
+                return message.delete();
             }).catch(() => {
                 return answer.delete()
             });
