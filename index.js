@@ -713,7 +713,7 @@ bot.on('message', async message => {
         support_cooldown.add(message.author.id);
         setTimeout(() => {
             if (support_cooldown.has(message.author.id)) support_cooldown.delete(message.author.id);
-        }, 300000);
+        }, 600000);
         let id_mm;
         let rep_message;
         let db_server = bot.guilds.find(g => g.id == "521639035442036736");
