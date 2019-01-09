@@ -678,7 +678,7 @@ bot.on('message', async message => {
                                     }else{
                                         rem++;
                                         let genchannel = message.guild.channels.find(c => c.name == "🌐welcome");
-                                        genchannel.send(`<@${channel.name}>, \`вам было снято одно предупреждение. [Прошло 3 дня]\``);
+                                        genchannel.send(`<@${channel.name}>, \`вам было снято одно предупреждение. [Прошло 7 дней]\``);
                                     }
                                     circle++;
                                 }
