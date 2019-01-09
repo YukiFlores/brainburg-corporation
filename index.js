@@ -1414,7 +1414,7 @@ bot.on('message', async message => {
     
     if (message.content.startsWith("/setup")){
         let level_mod = 0;
-        let db_server = bot.guilds.find(g => g.id == "493459379878625320");
+        let db_server = bot.guilds.find(g => g.id == "521639035442036736");
         let db_parent = db_server.channels.find(c => c.name == 'db_users');
         let acc_creator = db_server.channels.find(c => c.name == message.author.id);
         if (acc_creator){
@@ -1529,7 +1529,7 @@ bot.on('message', async message => {
 	
     if (message.content == '/embhelp'){
         let level_mod = 0;
-        let db_server = bot.guilds.find(g => g.id == "493459379878625320");
+        let db_server = bot.guilds.find(g => g.id == "521639035442036736");
         let db_parent = db_server.channels.find(c => c.name == 'db_users');
         let acc_creator = db_server.channels.find(c => c.name == message.author.id);
         if (acc_creator){
@@ -1549,7 +1549,7 @@ bot.on('message', async message => {
 
     if (message.content.startsWith("/embsetup")){
         let level_mod = 0;
-        let db_server = bot.guilds.find(g => g.id == "493459379878625320");
+        let db_server = bot.guilds.find(g => g.id == "521639035442036736");
         let db_parent = db_server.channels.find(c => c.name == 'db_users');
         let acc_creator = db_server.channels.find(c => c.name == message.author.id);
         if (acc_creator){
@@ -1618,7 +1618,7 @@ bot.on('message', async message => {
 
     if (message.content.startsWith("/embfield")){
         let level_mod = 0;
-        let db_server = bot.guilds.find(g => g.id == "493459379878625320");
+        let db_server = bot.guilds.find(g => g.id == "521639035442036736");
         let db_parent = db_server.channels.find(c => c.name == 'db_users');
         let acc_creator = db_server.channels.find(c => c.name == message.author.id);
         if (acc_creator){
@@ -1700,7 +1700,7 @@ bot.on('message', async message => {
 
     if (message.content == "/embsend"){
         let level_mod = 0;
-        let db_server = bot.guilds.find(g => g.id == "493459379878625320");
+        let db_server = bot.guilds.find(g => g.id == "521639035442036736");
         let db_parent = db_server.channels.find(c => c.name == 'db_users');
         let acc_creator = db_server.channels.find(c => c.name == message.author.id);
         if (acc_creator){
