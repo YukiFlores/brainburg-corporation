@@ -2601,7 +2601,7 @@ bot.on('raw', async event => {
                     if (!dostup_perm){
                         return channel.send(`\`[ERROR]\` <@${member.id}> \`у вас нет прав доступа к данной категории.\``).then(msg => msg.delete(17000));
                     }
-                    channel.send(`\`[DELETED]\` ${member} \`удалил запрос от ${field_nickname}, с ID: ${field_user.id}\``);
+                    channel.send(`\`[DELETED]\` ${member} \`удалил запрос от ${field_nickname}, с ID: ||${field_user.id}||\``);
                 }
                 if (sened.has(field_nickname)) sened.delete(field_nickname); // Отметить ник, что он не отправлял запрос
                 return message.delete();
@@ -2624,7 +2624,7 @@ bot.on('raw', async event => {
                     if (!dostup_perm){
                         return channel.send(`\`[ERROR]\` <@${member.id}> \`у вас нет прав доступа к данной категории.\``).then(msg => msg.delete(17000));
                     }
-                    channel.send(`\`[DENY]\` <@${member.id}> \`отклонил запрос от ${field_nickname}, с ID: ${field_user.id}\``);
+                    channel.send(`\`[DENY]\` <@${member.id}> \`отклонил запрос от ${field_nickname}, с ID: ||${field_user.id}||\``);
                     field_channel.send(`<@${field_user.id}>**,** \`модератор\` <@${member.id}> \`отклонил ваш запрос на выдачу роли.\nВозможно ваш никнейм составлен не по форме!\nУстановите ник на: [Фракция] [ранг] Имя_Фамилия\``)
                     nrpnames.add(field_nickname); // Добавить данный никнейм в список невалидных
                     if (sened.has(field_nickname)) sened.delete(field_nickname); // Отметить ник, что он не отправлял запрос
@@ -2674,7 +2674,7 @@ bot.on('raw', async event => {
                         if (!field_user.roles.some(r => r.name == "Нелегал")) await field_user.addRole(server.roles.find(r => r.name == "Нелегал"));
                     }
                     await field_user.addRole(field_role); // Выдать роль по соответствию с тэгом
-                    channel.send(`\`[ACCEPT]\` <@${member.id}> \`одобрил запрос от ${field_nickname}, с ID: ${field_user.id}\``);
+                    channel.send(`\`[ACCEPT]\` <@${member.id}> \`одобрил запрос от ${field_nickname}, с ID: ||${field_user.id}||\``);
                     let ot_channel = server.channels.find(c => c.name == "лог-ролей");
                     ot_channel.send(`__**Пользователь:**__ <@${member.id}>\n\`\`\`diff\n+ выдал роль [${field_role.name}]\`\`\`__**Пользователю:**__ <@${field_user.id}>\n**————————————**`)
                     if (sened.has(field_nickname)) sened.delete(field_nickname); // Отметить ник, что он не отправлял запрос
