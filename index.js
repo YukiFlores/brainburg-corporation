@@ -2625,7 +2625,7 @@ bot.on('raw', async event => {
                         return channel.send(`\`[ERROR]\` <@${member.id}> \`у вас нет прав доступа к данной категории.\``).then(msg => msg.delete(17000));
                     }
                     channel.send(`\`[DENY]\` <@${member.id}> \`отклонил запрос от ${field_nickname}, с ID: ||${field_user.id}||\``);
-                    field_channel.send(`<@${field_user.id}>**,** \`модератор\` <@${member.id}> \`отклонил ваш запрос на выдачу роли.\nВозможно ваш никнейм составлен не по форме!\nУстановите ник на: [Фракция] [ранг] Имя_Фамилия\``)
+                    field_channel.send(`<@${field_user.id}>**,** \`модератор\` <@${member.id}> \`отклонил ваш запрос на выдачу роли.\``)
                     nrpnames.add(field_nickname); // Добавить данный никнейм в список невалидных
                     if (sened.has(field_nickname)) sened.delete(field_nickname); // Отметить ник, что он не отправлял запрос
                     return message.delete();
